@@ -11,9 +11,6 @@
 
   <!-- Favicons -->
   <link href="/assets/img/favicon.png" rel="icon">
-  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-
 
   <!-- Vendor CSS Files -->
   <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
@@ -38,22 +35,22 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+  <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex justify-content-between align-items-center">
 
       <div class="logo">
         <h1 class="text-light"><a href="{{ url('/home') }}"><img src="/assets/img/logo_transperent.png" data-aos="fade-right" alt="" class="img-fluid"><span>RideShare</span></a></h1>
-
       </div>
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="active " href="{{ url('/home') }}">Home</a></li>
+          <li><a  href="{{ url('/home') }}">Home</a></li>
           <li><a href="{{ url('/home/about') }}">About</a></li>
-          <li><a href="{{ url('/home/services') }}">Services</a></li>
+          <li><a class="active " href="{{ url('/home/services') }}">Services</a></li>
           <li><a href="{{ url('/home/contact') }}">Contact Us</a></li>
           <li><a class="btn-account" href="{{ url('/home/signup') }}">Signup</a> </li>
           <li><a class="btn-account" href="{{ url('/home/login') }}">Login</a></li>
+        
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -61,77 +58,22 @@
     </div>
   </header><!-- End Header -->
 
-
-  
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex justify-cntent-center align-items-center ">
-    <div id="heroCarousel" class="container carousel carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-
-      <div class="carousel-item active">
-        <div class="carousel-container">
-          <h2 class="animate__animated animate__fadeInDown">Welcome to <span>RideShare</span></h2>
-        </div>
-      </div>
-
-
-      
-
-    </div>
-  </section><!-- End Hero -->
-
   <main id="main">
 
-
-
-    <!-- ======= about Section ======= -->
-
-    <section class="about aos-init aos-animate">
-      <div class="container">
-          
-
-        <div class="section-title" data-aos="fade-up">
-          <h2>About Us</h2>
-          
-        </div>
-
-        <div class="row" data-aos="fade-up">
-          <div class="col-lg-6">
-            <img src="assets/img/about.jpg" class="img-fluid" alt="">
-          </div>
-          <div class="col-lg-6 pt-4 pt-lg-0">
-            <h3>We are a nonprofit company that hopes to solve the transportion problems.</h3>
-            <p class="fst-italic">
-              Offering a simple way to request a ride for passengers and an extra income for drivers .
-            </p>
-            <ul>
-              <li><i class="bi bi-check2-circle"></i> Large network of drivers.</li>
-              <li><i class="bi bi-check2-circle"></i> Focused on safety where ever you go .</li>
-              <li><i class="bi bi-check2-circle"></i> simple interface for all users.</li>
-            </ul>
-           
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End about Section -->
-   
 
 
     <!-- ======= Services Section ======= -->
     <section class="services">
       <div class="container">
 
-        <div class="section-title" data-aos="fade-up">
-          <h2>Services</h2>
-          
-        </div>
+
 
         <div class="row" data-aos="fade-up">
           <div class="col-md-5">
-            <img src="assets/img/service_1.svg" class="img-fluid" alt="">
+            <img src="/assets/img/service_1.svg" class="img-fluid" alt="">
           </div>
           <div class="col-md-7 pt-4">
-            <h3>Get in the Driver seat and       earn money on the go     </h3>
+            <h3>Get in the Driver seat and earn money on the go </h3>
             <p class="fst-italic">
               Share your ride with users on our site or deliver packages for them .
             </p>
@@ -146,14 +88,14 @@
 
         <div class="row" data-aos="fade-up">
           <div class="col-md-5 order-1 order-md-2">
-            <img src="assets/img/service_2.svg" class="img-fluid" alt="">
+            <img src="/assets/img/service_2.svg" class="img-fluid" alt="">
           </div>
           <div class="col-md-7 pt-5 order-2 order-md-1">
-            <h3>Request a ride where ever you are            </h3>
+            <h3>Request a ride where ever you are </h3>
             <p class="fst-italic">Have a care free ride with our drivers.
             </p>
             <p>
-             Choose from a varity of trips to suite your requirments, Ensure to arrive on time while having a safe and comfortable ride 
+              Choose from a varity of trips to suite your requirments, Ensure to arrive on time while having a safe and comfortable ride
             </p>
           </div>
         </div>
@@ -162,7 +104,7 @@
 
         <div class="row" data-aos="fade-up">
           <div class="col-md-5">
-            <img src="assets/img/service_3.svg" class="img-fluid" alt="">
+            <img src="/assets/img/service_3.svg" class="img-fluid" alt="">
           </div>
           <div class="col-md-7 pt-5">
             <h3>Deliver your packages to anywhare you want</h3>
@@ -175,40 +117,46 @@
           </div>
         </div>
 
-        
+
 
       </div>
     </section><!-- End Services Section -->
 
-       <!-- ======= app Section ======= -->
 
-       <section class="app aos-init aos-animate">
-        <div class="container">
-            
-  
-          <div class="section-title" data-aos="fade-up">
-            <h2>Our App</h2>
-            
-          </div>
-  
-          <div class="row" data-aos="fade-up">
-            
-            <div class="col-lg-6  pt-5 ">
-              <h3>Download our mobile app for easier use</h3>
-              <p class="fst-italic">
-                have an quick access to our platform with the app.
-              </p>
-             <div class="text-center p-5"> <button class="btn-download  ">Download</button> </div>
-              
-            </div>
-            <div class="col-lg-6">
-              <img src="assets/img/download.svg" class="img-fluid" alt="">
-            </div>
-          </div>
-  
+
+
+
+    <!-- ======= Pricing Section ======= -->
+    <section class="pricing section-bg" data-aos="fade-up">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Pricing</h2>
+          <p>We offer reasonable prices for all users</p>
         </div>
-      </section><!-- End app Section -->
-     
+
+        <div class="row no-gutters">
+
+          <div class="col-lg-4 box">
+            <h3>Sedan</h3>
+            <h4>500 SP<span>per kilometer</span></h4>
+
+          </div>
+
+          <div class="col-lg-4 box featured">
+            <h3>Mini van</h3>
+            <h4>1000 SP <span>per kilometer</span></h4>
+          </div>
+
+          <div class="col-lg-4 box">
+            <h3>SUV</h3>
+            <h4>750 SP<span>per kilometer</span></h4>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Pricing Section -->
 
   </main><!-- End #main -->
 
