@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
+
 
 class RegisterController extends Controller
 {
@@ -47,12 +51,14 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(Request $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+        return Validator::make($request->all(), [
+            'user_name' => ['required', 'string', 'max:255', 'unique:users'],
+            'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'phone' => ['required', 'numeric', 'unique:users'],
         ]);
     }
 
@@ -65,9 +71,62 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'user_name' => $data['user_name'],
+            'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'phone' => $data['phone'],
         ]);
+    }
+
+    protected function get()
+    {
+        return User::get();
+    }
+
+    protected function store_user(Request $request)
+    {
+        $vaild = $this->validator($request);
+        if ($vaild->fails()) {
+            return redirect()->back()->withErrors($vaild)->withInput($request->all());
+        }
+        
+        $data=$request->all();
+       $user= User::create([
+            'user_name' => $data ['user_name'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'phone' => $data['phone'],
+            'role_type' => 'USER',
+        ]);
+        
+        Auth::login($user);
+        return redirect()->to('home');
+        
+       
+    }
+
+    protected function store_driver(Request $request)
+    {
+        $vaild = $this->validator($request);
+        if ($vaild->fails()) {
+            return redirect()->back()->withErrors($vaild)->withInput($request->all());
+        }
+        
+        $data=$request->all();
+       $user= User::create([
+            'user_name' => $data ['user_name'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'phone' => $data['phone'],
+            'role_type' => 'USER',
+        ]);
+        
+        Auth::login($user);
+        return redirect()->to('home');
+        
+       
     }
 }

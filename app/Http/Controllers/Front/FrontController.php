@@ -26,17 +26,10 @@ class FrontController extends Controller
         return view('Front/services');
     }
 
-    public function login()
+   
+    public function register_driver()
     {
-        return view('Front/login');
-    }
-    public function signup()
-    {
-        return view('Front/signup');
-    }
-    public function signup_driver()
-    {
-        return view('Front/signup-driver');
+        return view('Auth/register_driver');
     }
     public function signup_driver_car()
     {

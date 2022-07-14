@@ -10,8 +10,8 @@
         <h4>Useful Links</h4>
         <ul>
           <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/home') }}">Home</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/home/about') }}">About</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/home/services') }}">Services</a></li>
+          <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/about') }}">About</a></li>
+          <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/services') }}">Services</a></li>
           <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
           <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
         </ul>
