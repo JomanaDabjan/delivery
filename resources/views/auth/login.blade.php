@@ -23,7 +23,7 @@
 
 
   <!-- Bootstrap css files -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
 
 
 
@@ -80,15 +80,7 @@
             </span>
             @enderror
           </div>
-          <div class="form-group">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-              <label class="form-check-label" for="remember">
-                {{ __('Remember Me') }}
-              </label>
-            </div>
-          </div>
+          
           <div class=" d-flex-column mx-auto">
             <div class=" d-flex justify-content-center">
               <button type="submit" class="btn-log btn  ">

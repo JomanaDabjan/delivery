@@ -21,75 +21,17 @@
   <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Bootstrap css files -->
-  <link rel="stylesheet" href="{{URL::asset('assets/css/bootstrap.css')}}">
+ 
 
   <!-- Template Main CSS File -->
   <link href="{{URL::asset('assets/css/style.css')}}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Moderna - v4.8.0
-  * Template URL: https://bootstrapmade.com/free-bootstrap-template-corporate-moderna/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body class="antialiased">
 
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
-    <div class="container d-flex justify-content-between align-items-center">
-
-      <div class="logo">
-        <h1 class="text-light"><a href="{{ url('/home') }}"><img src="/assets/img/logo_transperent.png" data-aos="fade-right" alt="" class="img-fluid"><span>RideShare</span></a></h1>
-
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="{{ (request()->is('home')) ? 'active' : '' }}" href="{{ url('/home') }}">Home</a></li>
-          <li><a class="{{ (request()->is('about')) ? 'active' : '' }}" href="{{ url('/about') }}">About</a></li>
-          <li><a class="{{ (request()->is('services')) ? 'active' : '' }}" href="{{ url('/services') }}">Services</a></li>
-          <li><a class="{{ (request()->is('contact')) ? 'active' : '' }}" href="{{ url('/contact') }}">Contact Us</a></li>
-          @auth
-          <li> <a href="{{ url('/home') }}" class="{{ (request()->is('contact')) ? 'active' : '' }}">Trips</a></li>
-          <div class="dropdown">
-            <img src="assets/img/notifications2.svg" class=" dropdown-toggle  nav_icon" data-toggle="dropdown" role="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" alt="">
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </div>
-
-          <div class="dropdown">
-            <img src="assets/img/account.svg" class="dropdown-toggle nav_icon" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" alt="">
-
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="my_profile.html">My Profile</a>
-              <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}</a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-              </form>
-
-            </div>
-          </div>
-          @else
-          <li> <a href="{{ route('login') }}" class="btn-account">Login</a></li>
-
-          @if (Route::has('register'))
-          <li> <a href="{{ route('register') }}" class="btn-account">Register</a></li>
-          @endif
-          @endauth
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
+  @include('includes.header')
 
 
 
@@ -99,7 +41,10 @@
 
       <div class="carousel-item active">
         <div class="carousel-container">
-          <h2 class="animate__animated animate__fadeInDown">Welcome to <span>RideShare</span></h2>
+          <h2 class="animate__animated animate__fadeInDown">Welcome to <span>RideShare
+              @auth
+              {{Auth::user()->user_name}}
+              @endauth</span></h2>
         </div>
       </div>
 
@@ -261,11 +206,6 @@
   <script src="/assets/js/main.js"></script>
 
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-</body>
+  </body>
 
 </html>

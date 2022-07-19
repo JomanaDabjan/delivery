@@ -14,7 +14,7 @@
 
 
   <!-- Bootstrap css files -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
 
 
 

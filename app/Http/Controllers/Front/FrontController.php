@@ -7,10 +7,7 @@ use Illuminate\Routing\Controller;
 class FrontController extends Controller
 {
     //
-    public function index()
-    {
-        return view('home');
-    }
+   
     public function about()
     {
         return view('Front/about');
@@ -31,8 +28,5 @@ class FrontController extends Controller
     {
         return view('Auth/register_driver');
     }
-    public function signup_driver_car()
-    {
-        return view('Front/signup-driver-car');
-    }
+   
 }
