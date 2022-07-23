@@ -10,6 +10,7 @@ class Trip extends Model
     use HasFactory;
     protected $table='trip';
     public $timestamps = false;
+    protected $primaryKey = 'trip_id';
     protected $fillable = [
        
         'start_point_longitude',
@@ -22,7 +23,7 @@ class Trip extends Model
         'available_size',
         'available_weight',
         'available_seats',
-        'trip_status',
+        'status_id',
         'driver_rating',
         
     ];

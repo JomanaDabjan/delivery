@@ -136,7 +136,7 @@ class RegisterController extends Controller
             'color' =>  $data['color'],
             'insurance_type' => $data['insurance_type'],
             'passenger_count' =>  $data['passenger_count'],
-            'vehicle_type_id' => $data['vehicle_type_id'],
+            'vehicle_type' => $data['vehicle_type'],
             'max_load_size' => $data['max_load_size'],
             'max_load_weight' => $data['max_load_weight'],
         ]);

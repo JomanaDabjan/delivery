@@ -91,8 +91,12 @@
 
           <div class="form-group">
             <label for="phone">{{ __('Phone') }}</label>
-            <input type="text" class="form-control" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{ old('phone') }}" title="only numbers of six digits and above are allowed">
-
+            <input type="text" class="form-control  @error('phone') is-invalid @enderror" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{Auth::user()->phone}}" title="only numbers of six digits and above are allowed">
+            @error('phone')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
 
           </div>
 
@@ -163,13 +167,13 @@
           <div class="form-group">
             <label for="insurance_type">Insurance type</label>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="insurance_type" id="full">
+              <input class="form-check-input" type="radio" name="insurance_type" value="Full" id="full">
               <label class="form-check-label" for="full">
                 Full
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="insurance_type" id="compulsory" checked>
+              <input class="form-check-input" type="radio" name="insurance_type" id="compulsory" value="Compulsory" checked>
               <label class="form-check-label" for="compulsory">
                 Compulsory
               </label>
@@ -199,11 +203,10 @@
 
           <div class="form-group">
             <label>Vehicle Type</label>
-            <select name="vehicle_type_id" id="vehicle_type_id" class="form-select" required>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
+            <select name="vehicle_type" id="vehicle_type" class="form-select" required>
+              @foreach($vehicle_types as $vehicle_type)
+              <option>{{$vehicle_type->name}}</option>
+              @endforeach
             </select>
 
 

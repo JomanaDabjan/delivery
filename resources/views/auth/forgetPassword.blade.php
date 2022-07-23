@@ -48,67 +48,46 @@
 
 
 
-  <main id="main">
-
-    <section class="login">
-
-      <div class="container">
-
-
-
-        <form method="POST" action="{{ route('login') }}" >
-          @csrf
-
-          <div class="form-group">
-            <label for="email">{{ __('Email Address') }}</label>
-            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-            @error('email')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-
+<main id="main" class="login-form">
+  <div class="cotainer">
+      <div class="row justify-content-center">
+          <div class="col-md-8">
+              <div class="card">
+                  <div class="card-header">Reset Password</div>
+                  <div class="card-body">
+  
+                    @if (Session::has('message'))
+                         <div class="alert alert-success" role="alert">
+                            {{ Session::get('message') }}
+                        </div>
+                    @endif
+  
+                      <form action="{{ route('forget.password.post') }}" method="POST">
+                          @csrf
+                          <div class="form-group row">
+                              <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                              <div class="col-md-6">
+                                  <input type="text" id="email_address" class="form-control" name="email" required autofocus>
+                                  @if ($errors->has('email'))
+                                      <span class="text-danger">{{ $errors->first('email') }}</span>
+                                  @endif
+                              </div>
+                          </div>
+                          <div class="col-md-6 offset-md-4">
+                              <button type="submit" class="btn btn-primary">
+                                  Send Password Reset Link
+                              </button>
+                          </div>
+                      </form>
+                        
+                  </div>
+              </div>
           </div>
-          <div class="form-group">
-            <label for="password">{{ __('Password') }}</label>
-            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-            @error('password')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          
-          <div class=" d-flex-column mx-auto">
-            <div class=" d-flex justify-content-center">
-              <button type="submit" class="btn-log btn  ">
-                {{ __('Login') }}
-              </button>
-            </div>
-            <div class="d-flex justify-content-center">
-              @if (Route::has('password.request'))
-
-              <a class="btn btn-link" href="{{  route('forget.password.get') }}">
-                {{ __('Forgot Your Password?') }}
-              </a>
-              @endif
-            </div>
-          </div>
-
-        </form>
-
-
-
       </div>
+  </div>
+</main>
 
-    </section>
-
-
-
-
-  </main><!-- End #main -->
+<!-- End #main -->
 
   <!-- ======= Footer ======= -->
   @include('includes.footer')

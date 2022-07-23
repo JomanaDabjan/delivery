@@ -6,11 +6,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "geocodio/geocodio-library-php": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "laravel/ui": "^3.4"
+        "laravel/ui": "^3.4",
+        "larswiegers/laravel-maps": "^0.12.0",
+        "spatie/geocoder": "^3.14"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

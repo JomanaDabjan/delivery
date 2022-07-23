@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b48e51cf2e3a84d07f63a74dc5cb6852",
+    "content-hash": "d2c6f36f2d80ef06e5d69ca77775661c",
     "packages": [
         {
             "name": "brick/math",
@@ -507,6 +507,117 @@
                 }
             ],
             "time": "2022-02-20T15:07:15+00:00"
+        },
+        {
+            "name": "gajus/dindent",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gajus/dindent.git",
+                "reference": "d81c3a6f78fbe1ab26f5e753098bbbef6b6a9f3c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gajus/dindent/zipball/d81c3a6f78fbe1ab26f5e753098bbbef6b6a9f3c",
+                "reference": "d81c3a6f78fbe1ab26f5e753098bbbef6b6a9f3c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gajus\\Dindent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Gajus Kuizinas",
+                    "email": "gk@anuary.com"
+                }
+            ],
+            "description": "HTML indentation library for development and testing.",
+            "homepage": "https://github.com/gajus/dindent",
+            "keywords": [
+                "format",
+                "html",
+                "indent"
+            ],
+            "support": {
+                "issues": "https://github.com/gajus/dindent/issues",
+                "source": "https://github.com/gajus/dindent/tree/master"
+            },
+            "time": "2014-10-08T10:03:04+00:00"
+        },
+        {
+            "name": "geocodio/geocodio-library-php",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Geocodio/geocodio-library-php.git",
+                "reference": "63d518091cef9d94eee3d39ac1a401b80f937ed8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Geocodio/geocodio-library-php/zipball/63d518091cef9d94eee3d39ac1a401b80f937ed8",
+                "reference": "63d518091cef9d94eee3d39ac1a401b80f937ed8",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.2",
+                "symfony/var-dumper": "^4.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Geocodio\\GeocodioServiceProvider"
+                    ],
+                    "aliases": {
+                        "Geocodio": "Geocodio\\GeocodioFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Geocodio\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathias Hansen",
+                    "email": "hello@geocod.io",
+                    "homepage": "https://www.geocod.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "geocod.io geocoding API library",
+            "homepage": "https://github.com/geocodio/geocodio-library-php",
+            "keywords": [
+                "geocodio",
+                "geocodio-library-php"
+            ],
+            "support": {
+                "issues": "https://github.com/Geocodio/geocodio-library-php/issues",
+                "source": "https://github.com/Geocodio/geocodio-library-php/tree/v1.5.0"
+            },
+            "time": "2021-11-13T21:42:08+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -1324,6 +1435,68 @@
                 "source": "https://github.com/laravel/ui/tree/v3.4.6"
             },
             "time": "2022-05-20T13:38:08+00:00"
+        },
+        {
+            "name": "larswiegers/laravel-maps",
+            "version": "v0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LarsWiegers/laravel-maps.git",
+                "reference": "5a97d052a578fbac072db0ab450ddc3b6324aaa5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LarsWiegers/laravel-maps/zipball/5a97d052a578fbac072db0ab450ddc3b6324aaa5",
+                "reference": "5a97d052a578fbac072db0ab450ddc3b6324aaa5",
+                "shasum": ""
+            },
+            "require": {
+                "gajus/dindent": "^2.0.2",
+                "illuminate/support": "^8.0|^9.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Larswiegers\\LaravelMaps\\LaravelMapsServiceProvider"
+                    ],
+                    "aliases": {
+                        "LaravelMaps": "Larswiegers\\LaravelMaps\\LaravelMapsFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Larswiegers\\LaravelMaps\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lars Wiegers",
+                    "email": "larswiegers@live.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A new way to handle maps in your laravel applications.",
+            "homepage": "https://github.com/larswiegers/laravel-maps",
+            "keywords": [
+                "laravel-maps",
+                "larswiegers"
+            ],
+            "support": {
+                "issues": "https://github.com/LarsWiegers/laravel-maps/issues",
+                "source": "https://github.com/LarsWiegers/laravel-maps/tree/v0.12"
+            },
+            "time": "2022-04-08T13:00:57+00:00"
         },
         {
             "name": "league/commonmark",
@@ -2790,6 +2963,76 @@
                 }
             ],
             "time": "2022-03-27T21:42:02+00:00"
+        },
+        {
+            "name": "spatie/geocoder",
+            "version": "3.14.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/geocoder.git",
+                "reference": "66ef3c0e9e9bd5db385891a49f946afc5ec46b5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/geocoder/zipball/66ef3c0e9e9bd5db385891a49f946afc5ec46b5d",
+                "reference": "66ef3c0e9e9bd5db385891a49f946afc5ec46b5d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5|^7.0",
+                "illuminate/support": "^6.0|^7.0|^8.67|^9.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0|^5.0|^6.0",
+                "phpunit/phpunit": "^8.5.21|^9.0|^9.4.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Geocoder\\GeocoderServiceProvider"
+                    ],
+                    "aliases": {
+                        "Geocoder": "Spatie\\Geocoder\\Facades\\Geocoder"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Geocoder\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be"
+                }
+            ],
+            "description": "Geocoding addresses to coordinates",
+            "homepage": "https://github.com/spatie/geocoder",
+            "keywords": [
+                "coordinate",
+                "geocode",
+                "laravel",
+                "location",
+                "map"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/geocoder/issues",
+                "source": "https://github.com/spatie/geocoder/tree/3.14.1"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-06-29T06:29:45+00:00"
         },
         {
             "name": "symfony/console",

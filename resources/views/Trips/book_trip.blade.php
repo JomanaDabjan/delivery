@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -60,9 +64,6 @@
       </div>
 
       <form class="form container">
-
-
-
         <div class="form-group row">
           <div class="col-sm-3">
           </div>
@@ -98,18 +99,18 @@
           </div>
 
         </div>
-
-
       </form>
 
 
       <hr class="solid">
 
       <div class="row ml-4 mr-4">
-
+        @foreach($trips as $trip)
         <div type="button" class="trip_card col-md-6 col-xl-3 col-lg-4 " data-toggle="modal" data-target="#exampleModalCenter">
           <div class="card p-2" style="width: 18rem;  margin: auto;">
-            <img class="card-img-top  rounded-top" src="/assets/img/map.jfif" width="16rem" height="200rem" alt="Card image cap">
+            <div id="map2" class="card-img-top  rounded-top" style=" width:16rem; height:16rem;align-self: center;">
+            </div>
+
             <div class="card-body">
               <p class="card-text card-icon">
 
@@ -120,7 +121,7 @@
             </div>
           </div>
         </div>
-
+        @endforeach
         <div class="trip_card col-md-6 col-xl-3 col-lg-4 ">
           <div class="card p-2" style="width: 18rem;  margin: auto;">
             <img class="card-img-top  rounded-top" src="/assets/img/map.jfif" width="16rem" height="200rem" alt="Card image cap">
@@ -137,7 +138,9 @@
 
         <div class="trip_card col-md-6 col-xl-3 col-lg-4 ">
           <div class="card p-2" style="width: 18rem;  margin: auto;">
-            <img class="card-img-top  rounded-top" src="/assets/img/map.jfif" width="16rem" height="200rem" alt="Card image cap">
+          <div id="map2" class="card-img-top  rounded-top" style=" width:16rem; height:16rem;align-self: center;">
+            </div>
+
             <div class="card-body">
               <p class="card-text card-icon">
 
@@ -208,7 +211,7 @@
 
 
   </main><!-- End #main -->
-  
+
 
   <!-- ======= Footer ======= -->
   @include('includes.footer')
@@ -229,8 +232,107 @@
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
 
+  <script>
+    var greenIcon = new L.Icon({
+      iconUrl: 'https://img.icons8.com/material-sharp/48/2ECC71/marker.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [48, 48],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    var blueIcon = new L.Icon({
+      iconUrl: 'https://img.icons8.com/material-sharp/48/3498DB/marker.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [48, 48],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    /*var map = L.map('map').setView([34.730818, 36.709527], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+*/
+    var map2 = L.map('map2').setView([34.730818, 36.709527], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map2);
 
- 
+    var mark1
+    var mark2
+
+    var start = L.marker([51.5, -0.09], {
+      icon: greenIcon
+    }).addTo(map);
+
+    var end = L.marker([51.5, -0.09], {
+      icon: blueIcon
+    }).addTo(map);
+
+
+    function onMapClick(e) {
+
+      if (mark1 != null && mark2 != null) {
+        mark2 = null;
+        mark1 = e.latlng;
+        console.log("mark1 second val:" + mark1);
+
+        start.setLatLng(e.latlng)
+          .bindPopup("<b>start</b>")
+          .openPopup()
+          .addTo(map);
+
+      }
+
+      if (mark1 == null && mark2 == null) {
+        mark1 = e.latlng;
+        console.log("mark1 first val:" + mark1);
+
+        start.setLatLng(mark1).bindPopup("<b>start</b>")
+          .addTo(map).openPopup();
+
+      }
+
+      if (mark1 != null && mark2 == null && mark1 != e.latlng.toString()) {
+        mark2 = e.latlng;
+        console.log("mark2 first val:" + mark2);
+
+        end.setLatLng(mark2)
+          .bindPopup("<b>end</b>")
+          .openPopup()
+          .addTo(map);
+      }
+
+      console.log(typeof mark1);
+      let ss1 = mark1.toString().slice(7, -1);
+      let po1 = ss1.indexOf(",");
+      let lat1 = ss1.slice(0, po1);
+      let long1 = ss1.slice(po1 + 1, );
+      console.log("test" + lat1 + "  |" + long1);
+
+      console.log(typeof mark2);
+      let ss2 = mark2.toString().slice(7, -1);
+      let po2 = ss2.indexOf(",");
+      let lat2 = ss2.slice(0, po2);
+      let long2 = ss2.slice(po2 + 1, );
+      console.log("test" + lat2 + "  |" + long2);
+
+      document.getElementById('start_lat').value = lat1;
+      document.getElementById('end_lat').value = lat2;
+      document.getElementById('start_long').value = long2;
+      document.getElementById('end_long').value = long2;
+    }
+
+
+
+
+    map.on('click', onMapClick);
+  </script>
+
+
 
 </body>
 

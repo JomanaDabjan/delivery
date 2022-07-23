@@ -44,18 +44,29 @@
       <div class="container">
 
         <div class="pro_info">
-          <p>User Name:</p>
-          <p>Full Name:</p>
-          <p>Phone:</p>
-          <p>Email:</p>
-          <p>Password:</p>
+          @if (Session::has('success'))
+          <div class="alert alert-success" role="alert">
+            {{Session::get('success')}}
+          </div>
+          @endif
+
+
+          <p>User Name: {{Auth::user()->user_name}}</p>
+          <p>Full Name: {{Auth::user()->full_name}}</p>
+          <p>Phone: {{Auth::user()->phone}}</p>
+          <p>Email: {{Auth::user()->email}}</p>
           <p>ID Photo:</p>
+          <img src="{{asset('images/ID/'.$driver->id_photo)}}" height='200' width='250' style="border: 1px solid;" />
+          <br><br>
           <p>License Photo:</p>
+          <img src="{{asset('images/License/'.$driver->license)}}" height='200' width='250' style="border: 1px solid;" />
+          <br><br>
         </div>
         <div class="profile-group">
           <a href="#editModal" data-toggle="modal" class="btn-profile btn ">Edit My Info</a>
-          <a href="my_profile_driver_vehicle.html" class="btn-profile btn ">My Vehicle Info</a>
-          <a href="my_profile_log_driver.html" class="btn-profile btn ">My Trips Log</a>
+          <a href="{{route('my_profile_driver/vehicle')}}" class="btn-profile btn ">My Vehicle Info</a>
+          <a href="{{route('my_profile_driver/log')}}" class="btn-profile btn ">My Trips Log</a>
+          <a href="{{route('my_profile/change_password')}}" class="btn-profile btn ">Change password</a>
           <a class="btn-profile-delete btn " href="#delModal" data-toggle="modal">Delete My Account</a>
         </div>
       </div>
@@ -74,8 +85,12 @@
               <p>Do you really want to delete your account? This process cannot be undone.</p>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <form method="POST" action="{{ route('delete_driver') }}">
+                @csrf
+                <input type="text" name="d_id" id="d_id" value="{{$vehicle->vehicle_id}}" hidden>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
             </div>
           </div>
         </div>
@@ -92,72 +107,83 @@
               <h4>Edit Infomation</h4>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
-            <div class="modal-body">
+            <form method="POST" action="{{ route('update_driver') }}" enctype="multipart/form-data">
+              @csrf
+              <div class="modal-body p-4">
 
-              <form class="form needs-validation p-1" novalidate>
 
-                <div class="form-group">
-                  <label for="InputUserName">User Name</label>
-                  <input type="text" class="form-control" id="InputUserName" aria-describedby="Help" placeholder="Enter " pattern="[A-z]{3,}" title="only letters are allowed" required>
+                <input type="text" name="u_id" id="u_id" value="{{$driver->driver_id}}" hidden>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid name.
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="InputFullName">Full Name</label>
-                  <input type="text" class="form-control" id="InputFullName" aria-describedby="Help" placeholder="Enter " pattern="[A-z ]{3,}" title="only letters are allowed" required>
-
-                  <div class="invalid-feedback">
-                    Please provide a valid name.
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="InputEmail">Email address</label>
-                  <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required title="someemail@mail.something">
-
-                  <div class="invalid-feedback">
-                    Please provide a valid email.
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="InputPhone">Phone</label>
-                  <input type="number" class="form-control" id="InputPhone" aria-describedby="Help" placeholder="Enter " required pattern="[0-9]{6,}" title="only numbers allowed">
-
-                  <div class="invalid-feedback">
-                    Please provide a valid phone.
-                  </div>
-                </div>
 
 
                 <div class="form-group">
-                  <label for="InputIDPhoto">ID Photo</label>
-                  <input type="file" class="form-control" id="InputIDPhoto" aria-describedby="Help" placeholder="Enter " required>
+                  <label for="user_name">{{ __('User Name') }}</label>
+                  <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" name="user_name" value="{{Auth::user()->user_name}}" required pattern="[A-z]{3,}" title="only letters are allowed" autocomplete="user_name" autofocus>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid photo.
-                  </div>
+                  @error('user_name')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+
+
                 </div>
 
                 <div class="form-group">
-                  <label for="InputPassword">Password</label>
-                  <input type="password" class="form-control" id="InputPassword" placeholder="Password" pattern=".{6,}" required title="Password should have at least 6 or more characters">
+                  <label for="full_name">{{ __('Full Name') }}</label>
+                  <input id="full_name" type="text" class="form-control" name="full_name" value="{{Auth::user()->full_name}}" required autocomplete="full_name" pattern="[A-z]{3,}" title="only letters are allowed" autofocus>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid password.
-                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label for="email">{{ __('Email Address') }}</label>
+
+                  <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{Auth::user()->email}}" required autocomplete="email">
+
+                  @error('email')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="phone">{{ __('Phone') }}</label>
+                  <input type="text" class="form-control control @error('phone') is-invalid @enderror" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{Auth::user()->phone}}" title="only numbers of six digits and above are allowed">
+                  @error('phone')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+
+                </div>
+
+                <div class="form-group">
+                  <label for="u_id_photo">ID Photo</label><br>
+                  <input type="file" name="u_id_photo" class="form-control" id="u_id_photo" onChange="displayImageu_ID(this)" style="display: none;">
+                  <img src="{{asset('images/ID/'.$driver->id_photo)}}" onClick="triggerClicku_ID()" id="u_id_display" height='200' width='250' style="border: 1px solid; cursor: pointer;" />
+
+
+
+
+                </div>
+                <div class="form-group">
+                  <label for="u_license">License</label><br>
+                  <input type="file" name="u_license" class="form-control" id="u_license" onChange="displayImageu_Li(this)" style="display: none;">
+                  <img src="{{asset('images/License/'.$driver->license)}}" onClick="triggerClicku_Li()" id="u_li_display" height='200' width='250' style="border: 1px solid; cursor: pointer;" />
+
                 </div>
 
 
-            </div>
-            <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-commn">Edit</button>
-              </form>
-            </div>
+
+              </div>
+              <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-commn">Edit</button>
+
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -190,24 +216,35 @@
   <script src="/assets/js/main.js"></script>
 
   <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function() {
-      'use strict';
-      window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-          }, false);
-        });
-      }, false);
-    })();
+    //for update id_photo
+    function triggerClicku_ID(e) {
+      document.querySelector('#u_id_photo').click();
+    }
+
+    function displayImageu_ID(e) {
+      if (e.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.querySelector('#u_id_display').setAttribute('src', e.target.result);
+        }
+        reader.readAsDataURL(e.files[0]);
+      }
+    }
+
+    //for update license_photo
+    function triggerClicku_Li(e) {
+      document.querySelector('#u_license').click();
+    }
+
+    function displayImageu_Li(e) {
+      if (e.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.querySelector('#u_li_display').setAttribute('src', e.target.result);
+        }
+        reader.readAsDataURL(e.files[0]);
+      }
+    }
   </script>
 
 </body>

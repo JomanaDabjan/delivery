@@ -13,7 +13,7 @@
   <link href="/assets/img/favicon.png" rel="icon">
   <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
- 
+
 
   <!-- Google Fonts -->
 
@@ -48,7 +48,7 @@
       <div class="container">
         <div class="d-flex justify-content-between mb-2 pro_trip">
           <span class="h1">My Trips Details</span>
-          <a href="my_profile_log.html" class="btn-profile btn " style="margin: 0px;">booked trips details</a>
+          <a href="{{route('my_profile/log')}}" class="btn-profile btn " style="margin: 0px;">booked trips details</a>
 
         </div>
 
@@ -71,20 +71,22 @@
             </tr>
           </thead>
           <tbody>
+            @foreach($trips as $trip)
             <tr>
+              <td>{{$trip->status}}</td>
+              <td>{{$trip->start_time}}</td>
+              <td>{{$trip->end_time}}</td>
+              <td>{{$trip->counts}}</td>
+              <td>{{$trip->seats}}</td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{$trip->distance}}</td>
+              <td>{{$trip->weight}}</td>
+              <td>{{$trip->pac_cost}}</td>
+              <td>{{$trip->p_cost}}</td>
+              <td>{{$trip->cost}}</td>
             </tr>
+            @endforeach
           </tbody>
         </table>
 

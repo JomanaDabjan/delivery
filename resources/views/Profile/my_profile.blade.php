@@ -11,7 +11,7 @@
 
   <!-- Favicons -->
   <link href="/assets/img/favicon.png" rel="icon">
- 
+
   <!-- Google Fonts -->
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -43,7 +43,7 @@
 
       <div class="container">
         <div class="pro_info">
-          <p>User Name:   {{Auth::user()->user_name}}</p>
+          <p>User Name: {{Auth::user()->user_name}}</p>
           <p>Full Name: {{Auth::user()->full_name}}</p>
           <p>Phone: {{Auth::user()->phone}}</p>
           <p>Email: {{Auth::user()->email}}</p>
@@ -54,6 +54,7 @@
         <div class="profile-group">
           <a href="#editModal" data-toggle="modal" class="btn-profile btn ">Edit My Info</a>
           <a href="{{route('my_profile/log')}}" class="btn-profile btn ">My Trips Log</a>
+          <a href="{{route('my_profile/change_password')}}" class="btn-profile btn ">Change password</a>
           <a class="btn-profile-delete btn " href="#delModal" data-toggle="modal">Delete My Account</a>
         </div>
       </div>
@@ -71,8 +72,12 @@
               <p>Do you really want to delete your account? This process cannot be undone.</p>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <form method="POST" action="{{ route('delete_user') }}">
+                @csrf
+                <input type="text" name="d_id" id="d_id" hidden>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
             </div>
           </div>
         </div>
@@ -91,54 +96,55 @@
             </div>
             <div class="modal-body">
 
-              <form class="form needs-validation p-1" novalidate>
+              <form method="POST" action="{{ route('update_user') }}">
+                @csrf
                 <div class="form-group">
-                  <label for="InputUserName">User Name</label>
-                  <input type="text" class="form-control" id="InputUserName" aria-describedby="Help" placeholder="Enter " pattern="[A-z]{3,}" title="only letters are allowed" required>
+                  <label for="name">{{ __('User Name') }}</label>
+                  <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" name="user_name" value="{{Auth::user()->user_name}}" required pattern="[A-z]{3,}" title="only letters are allowed" autocomplete="user_name" autofocus>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid name.
-                  </div>
+                  @error('user_name')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+
+
                 </div>
 
                 <div class="form-group">
-                  <label for="InputFullName">Full Name</label>
-                  <input type="text" class="form-control" id="InputFullName" aria-describedby="Help" placeholder="Enter " pattern="[A-z ]{3,}" title="only letters are allowed" required>
+                  <label for="full_name">{{ __('Full Name') }}</label>
+                  <input id="full_name" type="text" class="form-control @error('full_name') is-invalid @enderror" name="full_name" value="{{Auth::user()->full_name}}" required autocomplete="full_name" pattern="[A-z]{3,}" title="only letters are allowed" autofocus>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid name.
-                  </div>
+                  @error('full_name')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+
                 </div>
 
                 <div class="form-group">
-                  <label for="InputEmail">Email address</label>
-                  <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required title="someemail@mail.something">
+                  <label for="email">{{ __('Email Address') }}</label>
 
-                  <div class="invalid-feedback">
-                    Please provide a valid email.
-                  </div>
+                  <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{Auth::user()->email}}" required autocomplete="email">
+
+                  @error('email')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
                 </div>
 
                 <div class="form-group">
-                  <label for="InputPhone">Phone</label>
-                  <input type="number" class="form-control" id="InputPhone" aria-describedby="Help" placeholder="Enter " required pattern="[0-9]{6,}" title="only numbers allowed">
+                  <label for="phone">{{ __('Phone') }}</label>
+                  <input type="text" class="form-control  @error('phone') is-invalid @enderror" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{Auth::user()->phone}}" title="only numbers of six digits and above are allowed">
+                  @error('phone')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
 
-                  <div class="invalid-feedback">
-                    Please provide a valid phone.
-                  </div>
                 </div>
-
-                <div class="form-group">
-                  <label for="InputPassword">Password</label>
-                  <input type="password" class="form-control" id="InputPassword" placeholder="Password" pattern=".{6,}" required title="Password should have at least 6 or more characters">
-
-                  <div class="invalid-feedback">
-                    Please provide a valid password.
-                  </div>
-                </div>
-
-
-
 
 
 
@@ -179,26 +185,6 @@
   <script src="/assets/js/main.js"></script>
 
 
-  <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function() {
-      'use strict';
-      window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-          }, false);
-        });
-      }, false);
-    })();
-  </script>
 </body>
 
 </html>

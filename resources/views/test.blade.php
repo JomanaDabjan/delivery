@@ -2,18 +2,27 @@
 <html lang="en">
 
 <head>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Ride Share</title>
+  <title>Announce-Trip</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
   <link href="/assets/img/favicon.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Bootstrap css files -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
+  <!-- Google Fonts -->
 
 
 
@@ -29,204 +38,114 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Moderna - v4.8.0
-  * Template URL: https://bootstrapmade.com/free-bootstrap-template-corporate-moderna/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
 
+
   <!-- ======= Header ======= -->
   @include('includes.header')
-
-
-
+<style>
+  #start_lat ,#end_lat {
+  opacity: 0;
+  width: 0;
+   /* Reposition so the validation message shows over the label */
+}
+</style>
   <main id="main">
 
-    <section class="signup">
-      <form method="POST" action="{{ route('store_driver') }}">
-        @csrf
+    <section class="trip">
 
-        <div class="container p-4">
+      <div class="container">
+        <div class="trip_info">
 
-          <h2>Personal Information</h2>
-          <div class="form-group">
-            <label for="name">{{ __('User Name') }}</label>
-            <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" name="user_name" value="{{ old('user_name') }}" required pattern="[A-z]{3,}" title="only letters are allowed" autocomplete="user_name" autofocus>
 
-            @error('user_name')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
 
+
+          <div class="section-title">
+            <h2>Enter Your Trip Details </h2>
 
           </div>
 
-          <div class="form-group">
-            <label for="full_name">{{ __('Full Name') }}</label>
-            <input id="full_name" type="text" class="form-control @error('full_name') is-invalid @enderror" name="full_name" value="{{ old('full_name') }}" required autocomplete="full_name" pattern="[A-z]{3,}" title="only letters are allowed" autofocus>
+          <form method="POST" action="{{ route('store_trip') }}">
+            @csrf
+  <input type="text" id="id" name="id" value="{{Auth::user()->id}}" hidden="true">
+            <div class="form-group ">
+              <div>
 
-            @error('full_name')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+                <label>
+                  Click on the map
+                  to locate your end
+                  and start point</label>
+              </div>
 
-          </div>
+              <div id="map" style="height: 180px; ">
+              </div>
 
-          <div class="form-group">
-            <label for="email">{{ __('Email Address') }}</label>
+              <input type="text" id="start_lat" name="start_lat" value=""  required title="please select your start point">
+              <input type="text" id="end_lat" name="end_lat" value="" required title="please select your end point">
+              <input type="text" id="start_long" name="start_long" value="" hidden="true" required>
+              <input type="text" id="end_long" name="end_long" value="" hidden="true" required>
 
-            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-            @error('email')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-
-          <div class="form-group">
-            <label for="phone">{{ __('Phone') }}</label>
-            <input type="text" class="form-control" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{ old('phone') }}" title="only numbers of six digits and above are allowed">
-
-
-          </div>
-
-          <div class="form-group">
-            <label for="id_photo">ID Photo</label>
-            <input type="file" name="id_photo" class="form-control" id="id_photo" required>
-
-
-          </div>
-          <div class="form-group">
-            <label for="license">License</label>
-            <input type="file" name="license" class="form-control" id="license" required>
-
-
-          </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-
-            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" title="Password should have at least 6 or more characters" required pattern=".{6,}" autocomplete="new-password">
-
-            @error('password')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-
-          </div>
+            </div>
 
 
 
 
 
+            <div class="form-group">
+              <label for="start_time">Start Time:</label>
+             
+              <input type="datetime-local" class="form-control" name="start_time" id="start_time" required>
+
+
+
+            </div>
+
+
+
+            <div class="form-group">
+              <label for="seats">Availiable Seats</label>
+              <select class="form-select" id="seats" name="seats" required title="Select Availiable Seats">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+              </select>
+
+
+
+            </div>
+
+
+            <div class="form-group">
+              <label for="size">Availiable Packages Size</label>
+              <input type="text" class="form-control" id="size" name="size" required pattern="[0-9]{3,}" title="only numbers allowed">
+
+
+            </div>
+
+            <div class="form-group">
+              <label for="weight">Availiable Packages Weight</label>
+              <input type="text" class="form-control" id="weight" name="weight" required pattern="[0-9]{3,}" title="only numbers allowed">
+            </div>
+
+
+
+            <div class=" signup-group">
+              <button type="submit" class="btn-trip btn ">Announce The Trip</button>
+            </div>
+
+
+          </form>
 
         </div>
-        <br>
-
-        <hr style="opacity: 0;">
-
-        <div class="container p-4">
-
-          <h2>Vehicle Information</h2>
-          <div class="form-group">
-            <label for="brand">Brand</label>
-            <input type="text" name="brand" class="form-control" id="brand" placeholder="eg. KIA,BMW,Audi " pattern="[A-Za-z].{2,}" required title="only letters are allowed">
-
-          </div>
-
-          <div class="form-group">
-            <label for="model">Model</label>
-            <input type="text" name="model" class="form-control" id="model" placeholder="eg. KIA cerato " pattern="[A-Za-z].{2,}" required title="only letters are allowed">
-
-
-          </div>
-
-          <div class="form-group">
-            <label for="license_num">License Number</label>
-            <input type="text" name="license_num" class="form-control" id="license_num" placeholder="eg. 231456" required pattern="[0-9]{6,}" title="only numbers allowed">
-
-          </div>
-
-          <div class="form-group">
-            <label for="insurance_type">Insurance type</label>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="insurance_type" id="full">
-              <label class="form-check-label" for="full">
-                Full
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="insurance_type" id="compulsory" checked>
-              <label class="form-check-label" for="compulsory">
-                Compulsory
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="color">Vehicle Color</label>
-            <input type="color" name="color" id="color" class="form-control" value="#aa1313" required title="Enter Vehicle Color">
-
-
-          </div>
-
-          <div class="form-group">
-            <label for="passenger_count">Passenger Count</label>
-            <select name="passenger_count" id="passenger_count" class="form-select" required>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-            </select>
-
-          </div>
-
-          <div class="form-group">
-            <label>Vehicle Type</label>
-            <select name="vehicle_type_id" id="vehicle_type_id" class="form-select" required>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-            </select>
-
-
-          </div>
-
-          <div class="form-group">
-            <label for="max_load_size">Max Load Size</label>
-            <input type="text" class="form-control" name="max_load_size" id="max_load_size"  placeholder="Liter" required pattern="[0-9]{4,}" title="only numbers are allowed">
-
-          </div>
-
-          <div class="form-group">
-            <label for="max_load_weight">Max Load Weight</label>
-            <input type="text" name="max_load_weight" class="form-control" id="max_load_weight"  placeholder=" KG" required pattern="[0-9]{4,}" title="only numbers are allowed">
-
-          </div>
-
-          <div class=" signup-group">
-          <button type="submit" class="btn-signup btn">
-              {{ __('Register') }}
-            </button>
-          </div>
-
-
-
-        </div>
-      </form>
+      </div>
     </section>
+
 
 
 
@@ -250,6 +169,81 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+  <script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+
+    var popup = L.popup();
+
+    var mark1
+    var mark2
+
+    var start = L.marker([51.5, -0.09]).addTo(map);
+
+    var end = L.marker([51.5, -0.09]).addTo(map);
+
+
+    function onMapClick(e) {
+
+      if (mark1 != null && mark2 != null) {
+        mark2 = null;
+        mark1 = e.latlng;
+        console.log("mark1 second val:" + mark1);
+
+        start.setLatLng(e.latlng)
+          .bindPopup("<b>start</b>")
+          .openPopup()
+          .addTo(map);
+
+      }
+
+      if (mark1 == null && mark2 == null) {
+        mark1 = e.latlng;
+        console.log("mark1 first val:" + mark1);
+
+        start.setLatLng(mark1).bindPopup("<b>start</b>")
+          .addTo(map).openPopup();
+
+      }
+
+      if (mark1 != null && mark2 == null && mark1 != e.latlng.toString()) {
+        mark2 = e.latlng;
+        console.log("mark2 first val:" + mark2);
+
+        end.setLatLng(mark2)
+          .bindPopup("<b>end</b>")
+          .openPopup()
+          .addTo(map);
+      }
+
+      console.log(typeof mark1);
+      let ss1 = mark1.toString().slice(7, -1);
+      let po1 = ss1.indexOf(",");
+      let lat1 = ss1.slice(0, po1);
+      let long1 = ss1.slice(po1 + 1, );
+      console.log("test"+lat1+"  |"+long1);
+      
+      console.log(typeof mark2);
+      let ss2 = mark2.toString().slice(7, -1);
+      let po2 = ss2.indexOf(",");
+      let lat2 = ss2.slice(0, po2);
+      let long2 = ss2.slice(po2 + 1, );
+      console.log("test"+lat2+"  |"+long2);
+
+      document.getElementById('start_lat').value = lat1;
+      document.getElementById('end_lat').value = lat2;
+      document.getElementById('start_long').value = long2;
+      document.getElementById('end_long').value = long2;
+    }
+
+
+
+    map.on('click', onMapClick);
+  </script>
 
 </body>
 

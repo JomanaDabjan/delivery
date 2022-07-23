@@ -10,6 +10,7 @@ class Package extends Model
     use HasFactory;
     protected $table='package';
     public $timestamps = false;
+    protected $primaryKey = 'package_id';
     protected $fillable = [
         'weight',
         'width',

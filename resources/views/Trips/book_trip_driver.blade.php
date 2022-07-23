@@ -58,7 +58,7 @@
 
       <p class="h2 text-center">Be your own Driver and Announce your ride</p>
       <div class="text-center m-4">
-        <a href="announce_trip.html" class="btn btn-trip-book">Announce Trip</a>
+        <a href="{{route('announce_trip')}}" class="btn btn-trip-book">Announce Trip</a>
       </div>
 
       <p class="text-center">or</p>

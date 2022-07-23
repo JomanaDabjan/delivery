@@ -17,7 +17,7 @@ class Vehicles extends Model
         'color',
         'insurance_type',
         'passenger_count',
-        'vehicle_type_id',
+        'vehicle_type',
         'max_load_size',
         'max_load_weight',
 

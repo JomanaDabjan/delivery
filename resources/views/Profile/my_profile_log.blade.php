@@ -48,9 +48,10 @@
         <h1 class="text-center">My Booked Trip Details</h1>
 
         <table class="pro_log">
+          <h2>Seat reserived trips</h2>
           <thead>
             <tr>
-              <th>Trip Type</th>
+              <th>Trip ID</th>
               <th>Start Time</th>
               <th>End Time</th>
               <th>Driver's Name</th>
@@ -58,23 +59,67 @@
               <th>Start Point</th>
               <th>End Point</th>
               <th>Km Distance</th>
-              <th>Kg Weight</th>
               <th>Cost</th>
+              <th>Trip Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{{Auth::user()->full_name}}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+          @foreach($seats as $seat)
+            <tr>  
+              <td>{{$seat->trip_id}}</td>
+              <td>{{$seat->start_time}}</td>
+              <td>{{$seat->end_time}}</td>
+              <td>{{$seat->user_name}}</td>
+              <td>{{$seat->seats_reserved}}</td>
+              <td>{{$seat->id}}</td>
+              <td>{{$seat->id}}</td>
+              <td>{{$seat->km_distance}}</td>
+              <td>{{$seat->trip_cost}}</td>
+              <td>{{$seat->name}}</td>
+             
             </tr>
+            @endforeach
+          </tbody>
+        </table>
+        <br>
+        <table class="pro_log">
+          <h2>Package reserived trips</h2>
+          <thead>
+            <tr>
+              <th>Trip ID</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Start Point</th>
+              <th>End Point</th>
+              <th>Driver's Name</th>
+              <th>Package weight</th>
+              <th>Package size</th>
+              <th>Receiver name</th>
+              <th>Receiver phone</th>
+              <th>Package Type</th>
+              <th>Cost</th>
+              <th>Trip Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach($packages as $package)
+            <tr>  
+              <td>{{$package->trip_id}}</td>
+              <td>{{$package->start_time}}</td>
+              <td>{{$package->end_time}}</td>
+              <td></td>
+              <td></td>
+              <td>{{$package->user_name}}</td>
+              <td>{{$package->weight}}</td>
+              <td>{{$package->height}}</td>
+              <td>{{$package->receiver_name}}</td>
+              <td>{{$package->receiver_phone}}</td>
+              <td>{{$package->type}}</td>
+              <td>{{$package->trip_cost}}</td>
+              <td>{{$package->status}}</td>
+             
+            </tr>
+            @endforeach
           </tbody>
         </table>
 

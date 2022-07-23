@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Models\Vehicle_type;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 class FrontController extends Controller
@@ -23,10 +24,5 @@ class FrontController extends Controller
         return view('Front/services');
     }
 
-   
-    public function register_driver()
-    {
-        return view('Auth/register_driver');
-    }
    
 }
