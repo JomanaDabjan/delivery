@@ -86,7 +86,7 @@
       </div>
     </header><!-- End Header -->
 
-
+<div class="sidebar">
     <div class="l-navbar" id="nav-bar">
       <nav class="nav">
         <div>
@@ -111,6 +111,7 @@
 
       </nav>
     </div>
+</div>
     <!--Container Main start-->
     <main id="main " class="height-100">
       @yield('content')

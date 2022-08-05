@@ -56,6 +56,7 @@
         <table class="pro_log">
           <thead>
             <tr>
+              <th>Trip ID</th>
               <th>Trip Status</th>
               <th>Start Time</th>
               <th>End Time</th>
@@ -70,23 +71,8 @@
               <th>Total Profit</th>
             </tr>
           </thead>
-          <tbody>
-            @foreach($trips as $trip)
-            <tr>
-              <td>{{$trip->status}}</td>
-              <td>{{$trip->start_time}}</td>
-              <td>{{$trip->end_time}}</td>
-              <td>{{$trip->counts}}</td>
-              <td>{{$trip->seats}}</td>
-              <td></td>
-              <td></td>
-              <td>{{$trip->distance}}</td>
-              <td>{{$trip->weight}}</td>
-              <td>{{$trip->pac_cost}}</td>
-              <td>{{$trip->p_cost}}</td>
-              <td>{{$trip->cost}}</td>
-            </tr>
-            @endforeach
+          <tbody id="table">
+
           </tbody>
         </table>
 
@@ -118,7 +104,51 @@
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+  <script>
+    // load data first time 
+    $.ajax({
+      url: "{{route('get_log_driver')}}",
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        var data = response;
+        var st = "";
+
+        $.each(data, function(index) {
+
+
+          st += " <tr>";
+          st += " <td>" + data[index].trip_id + "</td>";
+          st += " <td>" + data[index].status + "</td>";
+          st += " <td>" + data[index].start_time + "</td>";
+          st += " <td>" + data[index].end_time + "</td>";
+          st += " <td>" + data[index].counts + "</td>";
+          st += " <td>" + data[index].seats + "</td>";
+          st += " <td>" + data[index].start_address + "</td>";
+          st += " <td>" + data[index].end_address + "</td>";
+          st += " <td>" + data[index].distance + "</td>";
+          st += " <td>" + data[index].weight + "</td>";
+          st += " <td>" + data[index].pac_cost + "</td>";
+          st += " <td>" + data[index].p_cost + "</td>";
+          st += " <td>" + data[index].cost + "</td>";
+          st += "               </tr>";
+
+        });
+
+
+        $("#table").html(st);
+
+
+      },
+      error: function() {
+        alert('no response');
+      }
+
+
+    });
+  </script>
 </body>
 
 </html>

@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Trip extends Model
 {
     use HasFactory;
-    protected $table='trip';
+    protected $table = 'trip';
     public $timestamps = false;
     protected $primaryKey = 'trip_id';
     protected $fillable = [
-       
+        'start_address',
+        'end_address',
         'start_point_longitude',
         'start_point_latitude',
         'end_point_longitude',
@@ -25,7 +26,6 @@ class Trip extends Model
         'available_seats',
         'status_id',
         'driver_rating',
-        
-    ];
 
+    ];
 }

@@ -35,18 +35,31 @@ class ProfileController extends Controller
 
         $id2 = Driver::where('driver_id', $id)->first()->vehicle_id;
         $vehicle = Vehicles::where('vehicle_id', $id2)->first();
-        return view('Profile/my_profile_driver', ['vehicle' => $vehicle,'driver' => $driver]);
+        return view('Profile/my_profile_driver', ['vehicle' => $vehicle, 'driver' => $driver]);
     }
 
     public function profile_user_log()
     {
+        return view('Profile/my_profile_log');
+    }
+    public function get_seats_log_user()
+    {
         $id = Auth::user()->id;
         $seats = DB::select(DB::raw("SELECT p.*,t.start_time,t.end_time,u.user_name,ts.name FROM `passenger_trip` p JOIN  trip t ON p.trip_id=t.trip_id JOIN users u ON t.driver_id=u.id JOIN trip_status ts ON t.status_id=ts.status_id WHERE p.passenger_id=$id;"));
-        $packages = DB::select(DB::raw("SELECT p.*  ,t.start_time,t.end_time,u.user_name,ts.name 'status',pt.name 'type' FROM `package` p JOIN trip t ON t.trip_id=p.trip_id JOIN users u ON u.id=t.driver_id JOIN trip_status ts ON ts.status_id=t.status_id JOIN package_type pt ON pt.package_type_id=p.package_type_id WHERE p.sender_id=$id;"));
-        return view('Profile/my_profile_log', ['seats' => $seats, 'packages' => $packages]);
+
+        return  $seats;
     }
 
-    public function profile_driver_log()
+    public function get_packages_log_user()
+    {
+        $id = Auth::user()->id;
+
+        $packages = DB::select(DB::raw("SELECT p.*  ,t.start_time,t.end_time,u.user_name,ts.name 'status'FROM `package` p JOIN trip t ON t.trip_id=p.trip_id JOIN users u ON u.id=t.driver_id JOIN trip_status ts ON ts.status_id=t.status_id   WHERE p.sender_id=$id;"));
+        return  $packages;
+    }
+
+
+    public function get_log_driver()
     {
         $id = Auth::user()->id;
         $trips = DB::select(DB::raw("SELECT t.* ,ts.name 'status' ,ifnull(c.counts,0) counts ,ifnull(c.weight,0) weight,ifnull(c.pac_cost,0)pac_cost,rs.seats,ifnull(pass.distance,0) distance,ifnull(pass.p_cost,0) p_cost,ifnull(p_cost+pac_cost,0)cost
@@ -56,8 +69,14 @@ class ProfileController extends Controller
         join (SELECT t.trip_id,(v.passenger_count - t.available_seats) seats FROM trip t JOIN drivers d ON d.driver_id=t.driver_id JOIN vehicles v ON v.vehicle_id=d.vehicle_id) as rs ON rs.trip_id=t.trip_id 
         left join(SELECT t.trip_id,sum(p.km_distance) distance,sum(p.trip_cost)p_cost FROM trip t JOIN passenger_trip p ON p.trip_id=t.trip_id GROUP BY t.trip_id) pass ON pass.trip_id=t.trip_id
         WHERE t.driver_id=$id;"));
+        return  $trips;
+    }
 
-        return view('Profile/my_profile_log_driver', ['trips' => $trips]);
+    public function profile_driver_log()
+    {
+      
+
+        return view('Profile/my_profile_log_driver');
     }
 
     public function profile_driver_vehicle()
@@ -74,16 +93,5 @@ class ProfileController extends Controller
     {
 
         return view('Profile/change_password');
-    }
-
-
-    protected function get()
-    {
-        $response = Geocodio::reverse('33.900185, 35.484369');
-        $id = Auth::user()->id;
-        $trips = Passenger_trip::all()->where('passenger_id', $id);
-        $packages = Package::all()->where('sender_id', $id);
-
-        return $response;
     }
 }

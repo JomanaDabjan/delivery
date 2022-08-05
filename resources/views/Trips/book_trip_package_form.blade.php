@@ -51,135 +51,107 @@
 
           </div>
 
-          <form class="form needs-validation" novalidate>
-            <div class="form-group">
-              <label for="InputEmail">Receiver Name</label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder="" pattern="[A-Za-z].{2,}" required title="only letters are allowed">
+          <form method="POST" action="{{ route('store_packages') }}">
+            @csrf
+            <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
+            <input type="text" id="start_lat_trip" name="start_lat_trip" value="{{$trip->start_point_latitude}}" hidden="true">
+            <input type="text" id="end_lat_trip" name="end_lat_trip" value="{{$trip->end_point_latitude}}" hidden="true">
+            <input type="text" id="start_lng_trip" name="start_lng_trip" value="{{$trip->start_point_longitude}}" hidden="true">
+            <input type="text" id="end_lng_trip" name="end_lng_trip" value="{{$trip->end_point_longitude}}" hidden="true">
 
-              <div class="invalid-feedback">
-                Please provide a valid Name.
-              </div>
+            <div class="form-group">
+              <label for="r_name">Receiver Name</label>
+              <input type="text" class="form-control" id="r_name" name="r_name" pattern="[A-Za-z].{2,}" required title="only letters are allowed">
+
             </div>
 
             <div class="form-group">
-              <label for="InputEmail">Receiver Phone</label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder="" required pattern="[0-9]{6,}" title="only numbers allowed">
-
-              <div class="invalid-feedback">
-                Please provide a valid Phone.
-              </div>
+              <label for="r_phone">Receiver Phone</label>
+              <input type="text" class="form-control" id="r_phone" name="r_phone" required pattern="[0-9]{6,}" title="phone number must be more than 6 numbers">
 
 
             </div>
 
             <div class="form-group row">
-              <div class="col-4">
-                <label for="InputEmail">
-                  Click on the map to locate your end and start point</label>
+              <label>
+                Drag the markers on the map
+                to locate your
+                <span style="color: #2ECC71">start point</span>
+                and
+                <span style="color: #3498DB">end point</span> on the trip route</label>
+
+
+              <div id="map" class="img-fluid" style="height:200px; width:100%">
               </div>
 
-              <div class="col-3"></div>
-              <div class="col-5">
-                <img src="/assets/img/map.jfif" class="img-fluid" height="200" width="200">
-              </div>
-            </div>
+
+              <input type="text" id="start_lat" name="start_lat" value="34" required title="please select your start point">
+              <input type="text" id="end_lat" name="end_lat" value="34" required title="please select your end point">
+              <input type="text" id="start_long" name="start_long" value="37" hidden="true" required>
+              <input type="text" id="end_long" name="end_long" value="37" hidden="true" required>
 
 
-            <input type="text" hidden="true">
-            <input type="text" hidden="true">
-
-            <div class="form-group">
-              <label for="InputEmail">Package Height</label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder="" required pattern="[0-9]{1,}" title="only numbers allowed">
-
-
-              <div class="invalid-feedback">
-                Please provide a valid Package Height.
-              </div>
-
+              <input type="text" id="start_address" name="start_address" value="" hidden="true" required>
+              <input type="text" id="end_address" name="end_address" value="" hidden="true" required>
 
             </div>
-            <div class="form-group">
-              <label for="InputEmail">Package Length</label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder="" required pattern="[0-9]{1,}" title="only numbers allowed">
-
-              <div class="invalid-feedback">
-                Please provide a valid Package Length.
-              </div>
-
-
-            </div>
-
-            <div class="form-group">
-              <label for="InputEmail">Package Width </label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder="" required pattern="[0-9]{1,}" title="only numbers allowed">
-
-              <div class="invalid-feedback">
-                Please provide a valid Package Width.
-              </div>
-
-
-            </div>
-
-            <div class="form-group">
-              <label for="InputEmail">Package Weight</label>
-              <input type="text" class="form-control" id="Input" aria-describedby="Help" placeholder=" " required pattern="[0-9]{1,}" title="only numbers allowed">
-
-              <div class="invalid-feedback">
-                Please provide a valid Package Weight.
-              </div>
+        </div>
 
 
 
-            </div>
 
-            <div class="form-group row">
-              <div class="col-sm-5 col-xs-5">
-                <label for="InputEmail">Package Type</label>
-              </div>
+        <div class="form-group">
+          <label for="height">Package Height</label>
+          <input type="text" class="form-control" id="height" name="height" value="1" pattern="[0-9]{1,}" title="only numbers allowed">
 
-              <div class="col-sm-6 col-xs-6">
-                <select class="form-select" required title="Select Package Type">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                </select>
-              </div>
-
-            </div>
-
-
-            <div class=" signup-group">
-              <button type="submit" class="btn-trip btn btn-primary ">Book The Trip</button>
-            </div>
-          </form>
-
-          <script>
-            // Example starter JavaScript for disabling form submissions if there are invalid fields
-            (function() {
-              'use strict';
-              window.addEventListener('load', function() {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                  form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                  }, false);
-                });
-              }, false);
-            })();
-          </script>
 
         </div>
+
+
+        <div class="form-group">
+          <label for="length">Package Length</label>
+          <input type="text" class="form-control" id="length" name="length" value="1" pattern="[0-9]{1,}" title="only numbers allowed">
+
+        </div>
+
+        <div class="form-group">
+          <label for="width">Package Width </label>
+          <input type="text" class="form-control" id="width" name="width" value="1" pattern="[0-9]{1,}" title="only numbers allowed">
+
+        </div>
+
+        <div class="form-group">
+          <label for="weight">Package Weight</label>
+          <input type="text" class="form-control" id="weight" name="weight" value="1" pattern="[0-9]{1,}" title="only numbers allowed">
+
+
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-5 col-xs-5">
+            <label for="package_type">Package Type</label>
+          </div>
+
+          <div class="col-sm-6 col-xs-6">
+            <select class="form-select" id="package_type" name="package_type" required title="Select Package Type">
+
+              @foreach($package_type as $type)
+              <option>{{$type->name}}</option>
+              @endforeach
+            </select>
+          </div>
+
+        </div>
+
+
+        <div class=" signup-group">
+          <button type="submit" class="btn-trip btn btn-primary ">Book The Trip</button>
+        </div>
+        </form>
+
+
+
+      </div>
       </div>
     </section>
 
@@ -208,6 +180,180 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCSt4ABayMg8O3n9Hvxb_vrs_1oUfWXuA&callback=initMap&libraries=&v=weekly" defer></script>
+  <script>
+    //get driver trip coord
+    var trip_start_lat = document.getElementById("start_lat_trip").value;
+    var trip_start_lng = document.getElementById("start_lng_trip").value;
+    var trip_end_lat = document.getElementById("end_lat_trip").value;
+    var trip_end_lng = document.getElementById("end_lng_trip").value;
+
+    //init passenger trip coor
+
+    document.getElementById('start_lat').value = trip_start_lat;
+    document.getElementById('start_long').value = trip_start_lng;
+    document.getElementById('end_lat').value = trip_end_lat;
+    document.getElementById('end_long').value = trip_end_lng;
+
+
+    var start, end;
+
+    // Initialize and add the map
+    function initMap() {
+
+      var geocoder = new google.maps.Geocoder;
+      var geocoder2 = new google.maps.Geocoder;
+
+      const t_start = {
+        lat: parseFloat(trip_start_lat),
+        lng: parseFloat(trip_start_lng)
+      };
+
+      const t_end = {
+        lat: parseFloat(trip_end_lat),
+        lng: parseFloat(trip_end_lng)
+      };
+
+
+      // The map, centered at start point
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: t_start,
+        disableDefaultUI: true,
+        zoomControl: true,
+        fullscreenControl: true,
+      });
+
+
+      const green_marker =
+        "https://img.icons8.com/android/48/2ECC71/marker.png";
+
+      const blue_marker =
+        "https://img.icons8.com/android/48/3498DB/marker.png";
+
+      var end_point = new google.maps.Marker({
+        position: t_end,
+        map: map,
+        title: 'Google Maps',
+        draggable: true,
+        icon: blue_marker
+      });
+
+      var start_point = new google.maps.Marker({
+        position: t_start,
+        map: map,
+        title: 'Google Maps',
+        draggable: true,
+        icon: green_marker
+      });
+
+
+
+
+      google.maps.event.addListener(start_point, 'dragend', function(start_point) {
+        start = start_point.latLng;
+        document.getElementById('start_lat').value = start.lat();
+        document.getElementById('start_long').value = start.lng();
+
+        geocodestart(start);
+      });
+      google.maps.event.addListener(end_point, 'dragend', function(end_point) {
+        end = end_point.latLng;
+        document.getElementById('end_lat').value = end.lat();
+        document.getElementById('end_long').value = end.lng();
+        geocodeend(end);
+      });
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+
+        map,
+
+      });
+
+      directionsRenderer.addListener("directions_changed", () => {
+        const directions = directionsRenderer.getDirections();
+
+      });
+      displayRoute(
+        t_start,
+        t_end,
+        directionsService,
+        directionsRenderer
+      );
+
+      function geocodestart(start) {
+
+        geocoder.geocode({
+          'location': start
+        }, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+
+
+              document.getElementById('start_address').value = results[0].formatted_address;
+
+              console.log(results[0].formatted_address);
+
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+
+        });
+
+      }
+
+      function geocodeend(end) {
+
+        geocoder2.geocode({
+          'location': end
+        }, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+
+              document.getElementById('end_address').value = results[0].formatted_address;
+              console.log(results[0].formatted_address);
+              // results[0].formatted_address;
+
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+
+        });
+
+      }
+    }
+
+    function displayRoute(origin, destination, service, display) {
+      service
+        .route({
+          origin: origin,
+          destination: destination,
+
+          travelMode: google.maps.TravelMode.DRIVING,
+          avoidTolls: true,
+        })
+        .then((result) => {
+          display.setDirections(result);
+        })
+        .catch((e) => {
+          alert("Could not display directions due to: " + e);
+        });
+
+    }
+
+
+
+    window.initMap = initMap;
+  </script>
 
 
 </body>

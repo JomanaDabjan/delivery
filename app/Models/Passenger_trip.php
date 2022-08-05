@@ -13,7 +13,9 @@ class Passenger_trip extends Model
     protected $fillable = [
         'passenger_id',
         'trip_id',
-        'seat_reserved',
+        'seats_reserved',
+        'start_address',
+        'end_address',
         'start_point_longitude',
         'start_point_latitude',
         'end_point_longitude',
@@ -21,6 +23,7 @@ class Passenger_trip extends Model
         'km_distance',
         'trip_cost',
         'passenger_rating',
+        'trip_status',
     ];
 
 }

@@ -12,11 +12,11 @@
     --z-fixed: 100
 }
 
-.space{
+.sidebar .space{
 
     height: var(--header-height);
 }
-.space2{
+.sidebar .space2{
 
     height: var(--header-height2);
 }
@@ -37,7 +37,7 @@ header .container{
 }
 
 
-.l-navbar {
+.sidebar .l-navbar {
     position: fixed;
     top: 0;
     left: -30%;
@@ -49,7 +49,7 @@ header .container{
     z-index: var(--z-fixed)
 }
 
-.nav {
+.sidebar .nav {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -57,8 +57,8 @@ header .container{
     overflow: hidden
 }
 
-.nav_logo,
-.nav_link {
+.sidebar .nav_logo,
+.sidebar .nav_link {
     display: grid;
     grid-template-columns: max-content max-content;
     align-items: center;
@@ -66,48 +66,48 @@ header .container{
     padding: .5rem 0 .5rem 1.5rem
 }
 
-.nav_logo {
+.sidebar .nav_logo {
     margin-bottom: 2rem
 }
 
-.nav_logo-icon {
+.sidebar .nav_logo-icon {
     font-size: 1.25rem;
     color: var(--white-color)
 }
 
-.nav_logo-name {
+.sidebar .nav_logo-name {
     color: var(--white-color);
     font-weight: 700
 }
 
-.nav_link {
+.sidebar .nav_link {
     position: relative;
     color: var(--first-color-light);
     margin-bottom: 1.5rem;
     transition: .3s
 }
 
-.nav_link:hover {
+.sidebar .nav_link:hover {
     color: var(--white-color)
 }
 
-.nav_icon {
+.sidebar .nav_icon {
     font-size: 1.25rem
 }
 
-.show {
+.sidebar .show {
     left: 0
 }
 
-.body-pd {
+.sidebar .body-pd {
     padding-left: calc(var(--nav-width) )
 }
 
-.active {
+.sidebar .active {
     color: var(--white-color)
 }
 
-.active::before {
+.sidebar .active::before {
     content: '';
     position: absolute;
     left: 0;
@@ -116,7 +116,7 @@ header .container{
     background-color: var(--white-color)
 }
 
-.height-100 {
+.sidebar .height-100 {
     height: 100vh
 }
 
@@ -140,12 +140,12 @@ header .container{
         width: 45px
     }
 
-    .l-navbar {
+    .sidebar .l-navbar {
         left: 0;
         padding: 1rem 1rem 0 0
     }
 
-    .show {
+    .sidebar .show {
         width: calc(var(--nav-width) + 156px)
     }
 

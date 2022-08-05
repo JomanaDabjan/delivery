@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <!-- Vendor CSS Files -->
 <link href=" {{URL::asset('assets/vendor/animate.css/animate.min.css')}}" rel="stylesheet">
 <link href=" {{URL::asset('assets/vendor/aos/aos.css')}}" rel="stylesheet">
@@ -47,8 +49,14 @@
         </ul>
 
         @auth
+        
         <div class="dropdown">
-          <img src="{{URL::asset('assets/img/notifications2.svg')}}" class=" dropdown-toggle  nav_icon" data-toggle="dropdown" role="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" alt="">
+
+          <a class="nav-link nav-link-label dropdown-toggle nav_icon p-0" href="#" data-toggle="dropdown">
+
+            <i class="fa fa-bell-o " style="font-size:18px;color:white  "></i>
+            <span class="badge rounded-pill badge-notification bg-danger">1</span>
+          </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Action</a>
             <a class="dropdown-item" href="#">Another action</a>

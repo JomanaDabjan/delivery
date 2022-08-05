@@ -16,6 +16,8 @@ class Package extends Model
         'width',
         'height',
         'length',
+        'start_address',
+        'end_address',
         'start_point_longitude',
         'start_point_latitude',
         'end_point_longitude',
@@ -25,8 +27,9 @@ class Package extends Model
         'receiver_phone',
         'sender_id',
         'trip_id',
-        'package_type_id',
+        'package_type',
         'sender_rating',
+        'trip_status',
         
     ];
 

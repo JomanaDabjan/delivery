@@ -91,7 +91,7 @@
 
           <div class="form-group">
             <label for="phone">{{ __('Phone') }}</label>
-            <input type="text" class="form-control  @error('phone') is-invalid @enderror" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{Auth::user()->phone}}" title="only numbers of six digits and above are allowed">
+            <input type="text" class="form-control  @error('phone') is-invalid @enderror" id="phone" name="phone" required pattern="[0-9]{6,}" value="{{old('phone')}}" title="only numbers of six digits and above are allowed">
             @error('phone')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>

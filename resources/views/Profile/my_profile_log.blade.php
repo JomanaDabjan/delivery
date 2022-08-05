@@ -47,7 +47,10 @@
       <div class="container">
         <h1 class="text-center">My Booked Trip Details</h1>
 
-        <table class="pro_log">
+
+
+
+        <table class='pro_log'>
           <h2>Seat reserived trips</h2>
           <thead>
             <tr>
@@ -63,26 +66,15 @@
               <th>Trip Status</th>
             </tr>
           </thead>
-          <tbody>
-          @foreach($seats as $seat)
-            <tr>  
-              <td>{{$seat->trip_id}}</td>
-              <td>{{$seat->start_time}}</td>
-              <td>{{$seat->end_time}}</td>
-              <td>{{$seat->user_name}}</td>
-              <td>{{$seat->seats_reserved}}</td>
-              <td>{{$seat->id}}</td>
-              <td>{{$seat->id}}</td>
-              <td>{{$seat->km_distance}}</td>
-              <td>{{$seat->trip_cost}}</td>
-              <td>{{$seat->name}}</td>
-             
-            </tr>
-            @endforeach
+          <tbody id="table1">
+
           </tbody>
         </table>
         <br>
-        <table class="pro_log">
+
+
+
+        <table class='pro_log'>
           <h2>Package reserived trips</h2>
           <thead>
             <tr>
@@ -101,28 +93,9 @@
               <th>Trip Status</th>
             </tr>
           </thead>
-          <tbody>
-          @foreach($packages as $package)
-            <tr>  
-              <td>{{$package->trip_id}}</td>
-              <td>{{$package->start_time}}</td>
-              <td>{{$package->end_time}}</td>
-              <td></td>
-              <td></td>
-              <td>{{$package->user_name}}</td>
-              <td>{{$package->weight}}</td>
-              <td>{{$package->height}}</td>
-              <td>{{$package->receiver_name}}</td>
-              <td>{{$package->receiver_phone}}</td>
-              <td>{{$package->type}}</td>
-              <td>{{$package->trip_cost}}</td>
-              <td>{{$package->status}}</td>
-             
-            </tr>
-            @endforeach
+          <tbody id="table2">
           </tbody>
         </table>
-
       </div>
     </section>
 
@@ -150,6 +123,125 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <script>
+    // load data first time 
+    $.ajax({
+      url: "{{route('get_seats_log_user')}}",
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        var data = response;
+        var st = "";
+
+        $.each(data, function(index) {
+
+
+
+
+          st += " <tr>";
+          st += " <td>" + data[index].trip_id + "</td>";
+          st += " <td>" + data[index].start_time + "</td>";
+          st += " <td>" + data[index].end_time + "</td>";
+          st += " <td>" + data[index].user_name + "</td>";
+          st += " <td>" + data[index].seats_reserved + "</td>";
+          st += " <td>" + data[index].start_address + "</td>";
+          st += " <td>" + data[index].end_address + "</td>";
+          st += " <td>" + data[index].km_distance + "</td>";
+          st += " <td>" + data[index].trip_cost + "</td>";
+          st += " <td>" + data[index].name + "</td>";
+          st += "               </tr>";
+
+        });
+
+
+        $("#table1").html(st);
+
+
+
+
+
+
+      },
+      error: function() {
+        alert('no response');
+      }
+
+
+    });
+
+    $.ajax({
+      url: "{{route('get_packages_log_user')}}",
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        var data = response;
+        var st = "";
+
+
+        $.each(data, function(index) {
+
+
+
+
+
+
+          st += " <tr>";
+          st += " <td>" + data[index].trip_id + "</td>";
+          st += " <td>" + data[index].start_time + "</td>";
+          st += " <td>" + data[index].end_time + "</td>";
+          st += " <td>" + data[index].start_address + "</td>";
+          st += " <td>" + data[index].end_address + "</td>";
+          st += " <td>" + data[index].user_name + "</td>";
+          st += " <td>" + data[index].weight + "</td>";
+          st += " <td>" + data[index].height + "</td>";
+          st += " <td>" + data[index].receiver_name + "</td>";
+          st += " <td>" + data[index].receiver_phone + "</td>";
+          st += " <td>" + data[index].package_type + "</td>";
+          st += " <td>" + data[index].trip_cost + "</td>";
+          st += " <td>" + data[index].status + "</td>";
+
+          st += "               </tr>";
+
+
+
+        });
+
+
+        $("#table2").html(st);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      },
+      error: function() {
+        alert('no response');
+      }
+
+
+    });
+  </script>
+
+
 
 </body>
 

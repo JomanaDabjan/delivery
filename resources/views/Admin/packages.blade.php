@@ -6,6 +6,7 @@
 
     <table class="pro_log">
         <thead>
+        
             <tr>
                 <th>Package ID</th>
                 <th>Start Point</th>
@@ -25,23 +26,25 @@
             </tr>
         </thead>
         <tbody>
+        @foreach($packages as $package)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{$package->package_id}}</td>
+                <td>{{$package->start_point_longitude}}</td>
+                <td>{{$package->end_point_longitude}}</td>
+                <td>{{$package->weight}}</td>
+                <td>{{$package->width}}</td>
+                <td>{{$package->height}}</td>
+                <td>{{$package->length}}</td>
+                <td>{{$package->trip_cost}}</td>
+                <td>{{$package->receiver_name}}</td>
+                <td>{{$package->receiver_phone}}</td>
+                <td>{{$package->sender_id}}</td>
+                <td>{{$package->trip_id}}</td>
+                <td>{{$package->package_type_id}}</td>
 
             </tr>
         </tbody>
+        @endforeach
     </table>
 </div>
 @endsection

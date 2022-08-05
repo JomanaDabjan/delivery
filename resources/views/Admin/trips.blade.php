@@ -18,18 +18,21 @@
             </tr>
         </thead>
         <tbody>
+        @foreach($trips as $trip)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{$trip->trip_id}}</td>
+                <td>{{$trip->start_point_longitude}}</td>
+                <td>{{$trip->end_point_longitude}}</td>
+                <td>{{$trip->start_time}}</td>
+                <td>{{$trip->end_time}}</td>
+                <td>{{$trip->driver_id}}</td>
+                <td>{{$trip->status_id}}</td>
 
             </tr>
         </tbody>
+        @endforeach
     </table>
+   
 </div>
 
 @endsection

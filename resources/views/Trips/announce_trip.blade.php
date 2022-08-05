@@ -4,13 +4,14 @@
 <head>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
-  
+
   <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-  
 
 
- <meta charset="utf-8">
+
+  <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Announce-Trip</title>
@@ -45,23 +46,16 @@
 
   <!-- ======= Header ======= -->
   @include('includes.header')
-  <style>
-    #start_lat,
-    #end_lat {
-      opacity: 0;
-      width: 0;
-      /* Reposition so the validation message shows over the label */
-    }
-  </style>
+
   <main id="main">
 
     <section class="trip">
 
+
+
+
       <div class="container">
         <div class="trip_info">
-
-
-
 
           <div class="section-title">
             <h2>Enter Your Trip Details </h2>
@@ -75,8 +69,8 @@
               <div>
 
                 <label>
-                  Click on the map
-                  to locate your 
+                  Drag the markers on the map
+                  to locate your
                   <span style="color: #2ECC71">start point</span>
                   and
                   <span style="color: #3498DB">end point</span> </label>
@@ -89,6 +83,9 @@
               <input type="text" id="end_lat" name="end_lat" value="" required title="please select your end point">
               <input type="text" id="start_long" name="start_long" value="" hidden="true" required>
               <input type="text" id="end_long" name="end_long" value="" hidden="true" required>
+
+              <input type="text" id="start_address" name="start_address" value="" hidden="true" required>
+              <input type="text" id="end_address" name="end_address" value="" hidden="true" required>
 
             </div>
 
@@ -168,101 +165,125 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+
+
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCSt4ABayMg8O3n9Hvxb_vrs_1oUfWXuA&callback=initMap&libraries=&v=weekly" defer></script>
   <script>
-  
-
-    var greenIcon = new L.Icon({
-      iconUrl: 'https://img.icons8.com/material-sharp/48/2ECC71/marker.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [48, 48],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-    var blueIcon = new L.Icon({
-      iconUrl: 'https://img.icons8.com/material-sharp/48/3498DB/marker.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [48, 48],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-    var map = L.map('map').setView([34.730818,36.709527], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+    var start, end;
+    // Initialize and add the map
+    function initMap() {
 
 
-    var mark1
-    var mark2
+      var geocoder = new google.maps.Geocoder;
+      var geocoder2 = new google.maps.Geocoder;
+      // The location of homs
+      const homs = {
+        lat: 34.730818,
+        lng: 36.709527
+      };
+      // The map, centered at homs
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: homs,
+        disableDefaultUI: true,
+        zoomControl: true,
+        fullscreenControl: true,
+      });
 
-    var start = L.marker([51.5, -0.09], {
-      icon: greenIcon
-    }).addTo(map);
 
-    var end = L.marker([51.5, -0.09], {
-      icon: blueIcon
-    }).addTo(map);
+      const image1 =
+        "https://img.icons8.com/android/48/2ECC71/marker.png";
+
+      const image2 =
+        "https://img.icons8.com/android/48/3498DB/marker.png";
+
+      var marker1 = new google.maps.Marker({
+        position: homs,
+        map: map,
+        title: 'Google Maps',
+        draggable: true,
+        icon: image1
+      });
+      var marker2 = new google.maps.Marker({
+        position: homs,
+        map: map,
+        title: 'Google Maps',
+        draggable: true,
+        icon: image2
+      });
 
 
-    function onMapClick(e) {
+      google.maps.event.addListener(marker1, 'dragend', function(marker1) {
+        start = marker1.latLng;
+        document.getElementById('start_lat').value = start.lat();
+        document.getElementById('start_long').value = start.lng();
 
-      if (mark1 != null && mark2 != null) {
-        mark2 = null;
-        mark1 = e.latlng;
-        console.log("mark1 second val:" + mark1);
 
-        start.setLatLng(e.latlng)
-          .bindPopup("<b>start</b>")
-          .openPopup()
-          .addTo(map);
+        geocodestart(start);
+      });
+      google.maps.event.addListener(marker2, 'dragend', function(marker2) {
+        end = marker2.latLng;
+        document.getElementById('end_lat').value = end.lat();
+        document.getElementById('end_long').value = end.lng();
+
+        geocodeend(end);
+      });
+
+      function geocodestart(start) {
+
+        geocoder.geocode({
+          'location': start
+        }, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+
+
+              document.getElementById('start_address').value = results[0].formatted_address;
+
+              console.log(results[0].formatted_address);
+
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+
+        });
 
       }
 
-      if (mark1 == null && mark2 == null) {
-        mark1 = e.latlng;
-        console.log("mark1 first val:" + mark1);
+      function geocodeend(end) {
 
-        start.setLatLng(mark1).bindPopup("<b>start</b>")
-          .addTo(map).openPopup();
+        geocoder2.geocode({
+          'location': end
+        }, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+
+              document.getElementById('end_address').value = results[0].formatted_address;
+              console.log(results[0].formatted_address);
+              // results[0].formatted_address;
+
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+
+        });
 
       }
 
-      if (mark1 != null && mark2 == null && mark1 != e.latlng.toString()) {
-        mark2 = e.latlng;
-        console.log("mark2 first val:" + mark2);
-
-        end.setLatLng(mark2)
-          .bindPopup("<b>end</b>")
-          .openPopup()
-          .addTo(map);
-      }
-
-      console.log(typeof mark1);
-      let ss1 = mark1.toString().slice(7, -1);
-      let po1 = ss1.indexOf(",");
-      let lat1 = ss1.slice(0, po1);
-      let long1 = ss1.slice(po1 + 1, );
-      console.log("test" + lat1 + "  |" + long1);
-
-      console.log(typeof mark2);
-      let ss2 = mark2.toString().slice(7, -1);
-      let po2 = ss2.indexOf(",");
-      let lat2 = ss2.slice(0, po2);
-      let long2 = ss2.slice(po2 + 1, );
-      console.log("test" + lat2 + "  |" + long2);
-
-      document.getElementById('start_lat').value = lat1;
-      document.getElementById('end_lat').value = lat2;
-      document.getElementById('start_long').value = long2;
-      document.getElementById('end_long').value = long2;
     }
 
 
 
 
-    map.on('click', onMapClick);
+
+    window.initMap = initMap;
   </script>
 
 </body>

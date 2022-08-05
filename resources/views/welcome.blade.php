@@ -12,7 +12,7 @@
   <!-- Favicons -->
   <link href="/assets/img/favicon.png" rel="icon">
 
-
+  <link href="https://www.bootstrapcdn.com/fontawesome/">
   <!-- Vendor CSS Files -->
   <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
   <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
@@ -204,7 +204,22 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+  <script>
 
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+      cluster: 'mt1'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+  </script>
 
   </body>
 

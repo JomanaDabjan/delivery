@@ -48,8 +48,8 @@
 
 
 
-<main id="main" class="login-form">
-  <div class="cotainer">
+<main id="main" class="login-form p-5">
+  <div class="cotainer m-5">
       <div class="row justify-content-center">
           <div class="col-md-8">
               <div class="card">

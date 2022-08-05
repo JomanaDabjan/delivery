@@ -39,22 +39,20 @@
 
     <section class="trips">
 
-     
-        <div class="trip_info p-4 m-4">
 
-          <div class="section-title">
-            <h2>Trip Details</h2>
-          </div>
-          <div id="trip" class="row">
+      <div class="trip_info p-4 m-4">
 
-
-          </div>
-          <div id="button" class="row"></div>
+        <div class="section-title">
+          <h2>Trip Details</h2>
         </div>
+        <div id="trip" class="row">
 
 
+        </div>
+        <div id="button" class="row"></div>
+      </div>
 
-      
+
 
       <!-- End Modal -->
       <div class="modal fade" id="tripModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -66,7 +64,7 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-              <form class="rating" method="POST" action="{{ route('end_user_trip') }}">
+              <form class="rating" method="POST" action="{{ route('end_package_trip') }}">
                 @csrf
                 <label>
                   <input type="radio" name="stars" value="1" />
@@ -128,7 +126,7 @@
 
             </div>
             <div class="modal-footer justify-content-center">
-              <form method="POST" action="{{ route('cancel_user_trip') }}">
+              <form method="POST" action="{{ route('cancel_package_trip') }}">
                 @csrf
 
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue</button>
@@ -186,7 +184,7 @@
 
     // load data first time 
     $.ajax({
-      url: "{{route('get_passenger_track')}}",
+      url: "{{route('get_package_track')}}",
       type: 'GET',
       dataType: 'json',
       data: {
@@ -209,11 +207,9 @@
             trip_end_lat = data[index].e_lat;
             trip_end_lng = data[index].e_lng;
 
-            st += " ";
-             
-             st += " <div  class='col-md-6'>";
-              st += " <div  class='row mt-4'>";
-             st += " <div  class='col-md-6 col-sm-6'>";
+            st += " <div  class='col-md-6'>";
+            st += " <div  class='row mt-4'>";
+            st += " <div  class='col-md-6 col-sm-6'>";
             st += " <p>Start Time:<br><span id='stime'>" + data[index].start_time + "</span></p>";
             st += " <p>Elapsed Time:<br> <span id='timer'></span></p>";
             st += " <p>Driver name:" + data[index].user_name + "<br></p>";
@@ -228,9 +224,6 @@
             st += " <p>Number of Packages:<br>" + data[index].packages + "</p></div></div></div>";
             st += " <div  class='col-md-6'>";
             st += " <div id='map' class=' img-fluid' style='height:300px; width:100%;'></div></div>";
-           
-
-
           }
 
 
@@ -330,7 +323,7 @@
 
 
         $.ajax({
-          url: "{{route('get_passengers_trip')}}",
+          url: "{{route('get_package_trip')}}",
           type: 'GET',
           dataType: 'json',
           data: {
@@ -484,13 +477,13 @@
       var st = '';
       if (t > -360000) {
         document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
-        st+="<div class='col-3'></div>";
+        st += "<div class='col-3'></div>";
         st += "<br><button id='trip_info'  type='button' href='#tripModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>End Trip</button>"
         $("#button").html(st);
       } else {
         document.getElementById('timer').innerHTML = "00:00:00";
-        st+="<div class='col-3'></div>";
-        st += "<br><button id='trip_info'  type='button' href='#canselModal'  data-toggle='modal' class=' col-6 btn-trip-book btn mt-3'>Cancel Trip</button>"
+        st += "<div class='col-3'></div>";
+        st += "<br><button id='trip_info'  type='button' href='#canselModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>Cancel Trip</button>"
         $("#button").html(st);
       }
 

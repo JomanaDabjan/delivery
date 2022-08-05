@@ -10,5 +10,5 @@ class Package_type extends Model
     use HasFactory;
     protected $table='package_type';
     public $timestamps = false;
-    protected $fillable = ['name',];
+    protected $fillable = ['name'];
 }
