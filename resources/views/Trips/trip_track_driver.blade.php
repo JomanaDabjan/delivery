@@ -31,7 +31,7 @@
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
-
+  <link href="/assets/css/rating.css" rel="stylesheet">
 </head>
 
 <body>
@@ -50,7 +50,7 @@
 
         <div class="section-title">
           <h2>Trip Details</h2>
-
+          <input type="text" id="trip_id" value="{{$id}}" hidden>
         </div>
 
         <div id="trip" class="row">
@@ -72,49 +72,20 @@
         <div id="trip" class="modal-content">
           <div class="modal-header ">
 
-            <h4>Rate Your Trip</h4>
+            <h4>Finish your trip</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">
-            <form class="rating" method="POST" action="{{ route('end_driver_trip') }}">
-              @csrf
-              <label>
-                <input type="radio" name="stars" value="1" />
-                <span class="icon fa fa-star checked"></span>
-              </label>
-              <label>
-                <input type="radio" name="stars" value="2" />
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-              </label>
-              <label>
-                <input type="radio" name="stars" value="3" />
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-              </label>
-              <label>
-                <input type="radio" name="stars" value="4" />
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-              </label>
-              <label>
-                <input type="radio" name="stars" value="5" />
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-                <span class="icon fa fa-star checked"></span>
-              </label>
+            <p>Thank you for your service</p>
 
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-commn">Evaluate Trip</button>
+            <form method="POST" action="{{ route('end_driver_trip') }}">
+              @csrf
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-commn">Finish Trip</button>
 
-            <input type="text" id="trip_id" name="trip_id" value="21" hidden="true">
+              <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
 
             </form>
           </div>
@@ -138,14 +109,14 @@
 
           </div>
           <div class="modal-footer justify-content-center">
-            <form method="POST" action="{{ route('cancel_driver_trip') }}">
+            <form method="POST" id="cancelform" action="{{ route('cancel_driver_trip') }}">
               @csrf
 
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue</button>
               <button type="submit" class="btn btn-danger">Call off Trip</button>
 
-              <input type="text" id="trip_id" name="trip_id" value="21" hidden="true">
-
+              <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
+              <input type="text" id="end_address" name="end_address" value="" hidden="true">
             </form>
           </div>
 
@@ -183,8 +154,11 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script>
+    var t;
     let map, infoWindow, pos;
-
+    var user_ids = [];
+    var end_address;
+    var trip_id = document.getElementById('trip_id').value;
     //get driver trip coord
     var trip_start_lat;
     var trip_start_lng;
@@ -197,16 +171,18 @@
       type: 'GET',
       dataType: 'json',
       data: {
-        id: 21
+        id: trip_id
       },
       success: function(response) {
         var data = response;
         var st = "";
         $.each(data, function(index) {
+          end_address = data[index].end_address;
+          document.getElementById('end_address').value = end_address;
+          //alert(end_address);
 
-
-          if (data[index].trip_status == 'ended' || data[index].trip_status == 'canceled') {
-            console.log(data[index].trip_status);
+          if (data[index].status_id == '4' || data[index].status_id == '3') {
+            // console.log(data[index].trip_status);
             st += "<p style='text-align: center;'>your trip has ended or got canceled</p>";
             st += "<a  href='{{ url('/home') }}'  class=' btn-trip-book btn mt-3'>Go Home</a>";
           } else {
@@ -240,7 +216,26 @@
 
         $("#trip").html(st);
         startTime();
+        if (parseInt(t) < -1800000) {
+          $.ajax({
+            url: "{{route('ongoing_trip')}}",
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              trip_id: trip_id
+            },
+            success: function(response) {
+              console.log('goingg');
 
+
+            },
+            error: function() {
+              alert('no response');
+            }
+
+
+          });
+        }
 
         const t_start = {
           lat: parseFloat(trip_start_lat),
@@ -335,7 +330,7 @@
           type: 'GET',
           dataType: 'json',
           data: {
-            id: 21
+            id: trip_id
           },
           success: function(response) {
             var data = response;
@@ -344,8 +339,11 @@
             var passengers = 1;
             var packages = 1;
             var ways = [];
+
             $.each(data, function(index) {
               locations.push([data[index].start_point_latitude, data[index].start_point_longitude, data[index].end_point_latitude, data[index].end_point_longitude]);
+              user_ids.push([data[index].user_id, data[index].name, data[index].role_type]);
+              //              console.log(user_ids);
 
               if (data[index].name == 'package') {
                 st += "<p>Package" + packages + " cost:" + data[index].trip_cost + "</p>";
@@ -409,7 +407,7 @@
 
               total = total / 1000;
               //document.getElementById("total").innerHTML = total + " km";
-              console.log(total);
+              // console.log(total);
             }
 
             function displayRoute(origin, destination, service, display) {
@@ -424,14 +422,8 @@
                 })
                 .then((result) => {
                   display.setDirections(result);
-                  console.log(result.routes[0]);
-                  let total = 0;
-                  for (let i = 0; i < result.routes[0].legs.length; i++) {
-                    total += result.routes[0].legs[i].distance.value;
-                  }
+                  // console.log(result.routes[0]);
 
-                  total = total / 1000;
-                  console.log(total);
                 })
                 .catch((e) => {
                   alert("Could not display directions due to: " + e);
@@ -474,17 +466,19 @@
 
   <script>
     //elapsed time function
+
+
     function startTime() {
       var stime = document.getElementById('stime').textContent;
 
-      let starttime = new Date(stime);
-      let endtime = new Date();
-      let t = endtime - starttime;
-
+      var starttime = new Date(stime);
+      var endtime = new Date();
+      t = endtime - starttime;
+      //t = t - 50000;
       // document.getElementById('diff').value = t;
 
-      //console.log(360000);
-      const today = new Date(t);
+      //  console.log((parseInt(t)));
+      const today = new Date((parseInt(t) - 7200000));
 
       let h = today.getHours();
       let m = today.getMinutes();
@@ -495,17 +489,26 @@
 
       setTimeout(startTime, 1000);
       var st = '';
-      if (t > -360000) {
-        document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
-        st += "<div class='col-3'></div>";
-        st += "<br><button id='trip_info'  type='button' href='#tripModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>End Trip</button>"
-        $("#button").html(st);
-      } else {
+
+
+      if (parseInt(t) < -3600000) {
         document.getElementById('timer').innerHTML = "00:00:00";
         st += "<div class='col-3'></div>";
         st += "<br><button id='trip_info'  type='button' href='#canselModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>Cancel Trip</button>"
         $("#button").html(st);
       }
+      if (parseInt(t) < 0) {
+        document.getElementById('timer').innerHTML = "00:00:00";
+
+      }
+      if (parseInt(t) > 0) {
+
+        document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
+        st += "<div class='col-3'></div>";
+        st += "<br><button id='trip_info'  type='button' href='#tripModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>End Trip</button>"
+        $("#button").html(st);
+      }
+
 
 
     }
@@ -518,13 +521,72 @@
     }
   </script>
 
-  <script>
-    $(':radio').change(function() {
-      console.log('New star rating: ' + this.value);
-      document.getElementById("rate").value = this.value;
-    });
-  </script>
 
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+
+
+  <script>
+    window.onload = function() {
+      document.getElementById("cancelform").onsubmit = function onSubmit(form) {
+
+
+        // var driver_id = document.getElementById('driver_id').value;
+        // console.log(driver_id);
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+          cluster: 'mt1'
+        });
+        // alert(user_ids.length);
+        for (var i = 0; i < user_ids.length; i++) {
+         // alert(user_ids[i][0]);
+          var channel2 = pusher.subscribe('new_notification' + user_ids[i][0]);
+          //alert(channel2);
+          var notificationsWrapper = $('.dropdown-notifications');
+          var notificationsToggle = notificationsWrapper.find('a[data-toggle]');
+          var notificationsCountElem = notificationsToggle.find('span[data-count]');
+          var notificationsCount = parseInt(notificationsCountElem.data('count'));
+          var notifications = notificationsWrapper.find('div.scrollable-container');
+
+          channel2.bind('my-event', function(data) {
+
+            // console.log(data.user_id);
+            var existingNotifications = notifications.html();
+            //console.log(existingNotifications);
+            if (user_ids[i][2] == 'USER') {
+              var newNotificationHtml = `
+              <a class="dropdown-item dropped_a" href="Trips">
+              <p class="paragraph" > ` + data.message + ` ` + data.trip_end + `</p>
+              <p class="paragraph">You may search for a new one, Sorry for your inconveince</p>
+              <p class="paragraph date">` + data.date + `/` + data.clock + `</p>
+              </a>
+              <hr style="margin: unset;">`;
+            }
+            if (user_ids[i][2] == 'DRIVER') {
+              var newNotificationHtml = `
+              <a class="dropdown-item dropped_a" href="Trips_driver">
+            <p class="paragraph" > ` + data.message + ` ` + data.trip_end + `</p>
+            <p class="paragraph">You may search for a new one, Sorry for your inconveince</p>
+            <p class="paragraph date">` + data.date + `/` + data.clock + `</p>
+            </a>
+             <hr style="margin: unset;">`;
+            }
+            notifications.html(newNotificationHtml + existingNotifications);
+            notificationsCount += 1;
+            notificationsCountElem.attr('data-count', notificationsCount);
+            notificationsWrapper.find('.notif-count').text(notificationsCount);
+            notificationsWrapper.show();
+
+          });
+        }
+
+      }
+
+    }
+  </script>
 </body>
 
 </html>

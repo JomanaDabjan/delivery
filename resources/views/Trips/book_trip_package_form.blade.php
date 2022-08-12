@@ -51,9 +51,10 @@
 
           </div>
 
-          <form method="POST" action="{{ route('store_packages') }}">
+          <form method="POST" id="frmSubmit" action="{{ route('store_packages') }}">
             @csrf
             <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
+            <input type="text" id="driver_id" name="driver_id" value="{{$trip->driver_id}}" hidden="true">
             <input type="text" id="start_lat_trip" name="start_lat_trip" value="{{$trip->start_point_latitude}}" hidden="true">
             <input type="text" id="end_lat_trip" name="end_lat_trip" value="{{$trip->end_point_latitude}}" hidden="true">
             <input type="text" id="start_lng_trip" name="start_lng_trip" value="{{$trip->start_point_longitude}}" hidden="true">
@@ -90,9 +91,8 @@
               <input type="text" id="start_long" name="start_long" value="37" hidden="true" required>
               <input type="text" id="end_long" name="end_long" value="37" hidden="true" required>
 
-
-              <input type="text" id="start_address" name="start_address" value="" hidden="true" required>
-              <input type="text" id="end_address" name="end_address" value="" hidden="true" required>
+              <input type="text" id="start_address" name="start_address" value="{{$trip->start_address}}" hidden="true" required>
+              <input type="text" id="end_address" name="end_address" value="{{$trip->end_address}}" hidden="true" required>
 
             </div>
         </div>
@@ -355,7 +355,68 @@
     window.initMap = initMap;
   </script>
 
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
+
+
+  <script>
+    window.onload = function() {
+      document.getElementById("frmSubmit").onsubmit = function onSubmit(form) {
+
+
+        var driver_id = document.getElementById('driver_id').value;
+        console.log(driver_id);
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+          cluster: 'mt1'
+        });
+        var channel2 = pusher.subscribe('new_notification' + driver_id);
+
+        var notificationsWrapper = $('.dropdown-notifications');
+        var notificationsToggle = notificationsWrapper.find('a[data-toggle]');
+        var notificationsCountElem = notificationsToggle.find('span[data-count]');
+        var notificationsCount = parseInt(notificationsCountElem.data('count'));
+        var notifications = notificationsWrapper.find('div.scrollable-container');
+
+
+        // Subscribe to the channel we specified in our Laravel Event
+
+        // Bind a function to a Event (the full Laravel class)
+
+
+        channel2.bind('my-event', function(data) {
+
+          // console.log(data.user_id);
+          var existingNotifications = notifications.html();
+          //console.log(existingNotifications);
+          //  var newNotificationHtml = 
+
+
+          var newNotificationHtml = `
+           <a class="dropdown-item dropped_a" href="Trips/track_trip/` + data.trip_id + `">
+          <p class="paragraph" > ` + data.message + ` ` + data.trip_end + `</p>
+          <p class="paragraph date">` + data.date + `/` + data.clock + `</p>
+          </a>
+          <hr style="margin: unset;">`;
+
+
+
+          //  console.log(newNotificationHtml);
+          notifications.html(newNotificationHtml + existingNotifications);
+          notificationsCount += 1;
+          notificationsCountElem.attr('data-count', notificationsCount);
+          notificationsWrapper.find('.notif-count').text(notificationsCount);
+          notificationsWrapper.show();
+
+        });
+
+      }
+
+    }
+  </script>
 </body>
 
 </html>

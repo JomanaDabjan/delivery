@@ -56,6 +56,13 @@
 
     <section class="trip_book">
 
+      @if (Session::has('success'))
+      <div class="alert alert-success" style="width: fit-content;margin: auto;" role="alert">
+        {{Session::get('success')}}
+      </div>
+      <br>
+      @endif
+
       <p class="h2 text-center">Be your own Driver and Announce your ride</p>
       <div class="text-center m-4">
         <a href="{{route('announce_trip')}}" class="btn btn-trip-book">Announce Trip</a>

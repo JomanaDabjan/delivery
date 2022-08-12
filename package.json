@@ -25,11 +25,7 @@
         "vue-router": "^3.5.4",
         "vue-template-compiler": "^2.6.12"
     },
-    "dependencies": {
-        "geocodio": "^2.0.0",
-        "tripkit-leaflet": "^1.0.3",
-        "vform": "^2.1.2"
-    },
+    "dependencies": {},
     "overrides": {
         "autoprefixer": "10.4.5"
     }

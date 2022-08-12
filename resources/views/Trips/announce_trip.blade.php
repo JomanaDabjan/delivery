@@ -3,10 +3,7 @@
 
 <head>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
-
-  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+ <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 
 

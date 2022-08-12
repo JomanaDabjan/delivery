@@ -1,3 +1,6 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!-- Vendor CSS Files -->
@@ -15,6 +18,27 @@
 <!-- Template Main CSS File -->
 <link href="{{URL::asset('assets/css/style.css')}}" rel="stylesheet">
 
+<style>
+/* width */
+.scrollable-container::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+.scrollable-container::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.scrollable-container::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+</style>
 @if (Request()->is('home'))
 <header id="header" class="fixed-top d-flex align-items-center header-transparent">
   @else
@@ -33,10 +57,11 @@
           <li><a class="{{ (request()->is('services')) ? 'active' : '' }}" href="{{ url('/services') }}">Services</a></li>
           <li><a class="{{ (request()->is('contact')) ? 'active' : '' }}" href="{{ url('/contact') }}">Contact Us</a></li>
           @auth
+          <input type="text" id="u_id" value="{{Auth::user()->id}}" hidden>
           @if(Auth::user()->role_type=='USER')
-          <li> <a href="{{ route('trips') }}" class="{{ (request()->is('Trips')) ? 'active' : '' }}">Trips</a></li>
+          <li> <a href="{{ route('trips') }}" id="end" class="{{ (request()->is('Trips')) ? 'active' : '' }}">Trips</a></li>
           @else
-          <li> <a href="{{ route('trips_driver') }}" class="{{ (request()->is('Trips_driver')) ? 'active' : '' }}">Trips</a></li>
+          <li> <a href="{{ route('trips_driver') }}" id="end" class="{{ (request()->is('Trips_driver')) ? 'active' : '' }}">Trips</a></li>
           @endif
 
           @else
@@ -49,18 +74,70 @@
         </ul>
 
         @auth
-        
-        <div class="dropdown">
+
+        <div class="dropdown dropdown-notifications">
 
           <a class="nav-link nav-link-label dropdown-toggle nav_icon p-0" href="#" data-toggle="dropdown">
 
+
+
+            <span class="badge rounded-pill badge-notification bg-dark notif-count" data-count="{{$count->counts}}">{{$count->counts}}</span>
             <i class="fa fa-bell-o " style="font-size:18px;color:white  "></i>
-            <span class="badge rounded-pill badge-notification bg-danger">1</span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+          <div class="dropdown-menu scrollable-container" style="height: 20rem;width: 16rem;overflow-x: hidden;" aria-labelledby="dropdownMenuButton">
+
+            <hr style="margin: unset;">
+            @foreach($notifi as $not)
+            @if($not->trip_status=='waiting')
+
+            @if($not->trip_type=='passenger')
+            <a class="dropdown-item dropped_a" href="{{route('track_trips_user',[$not->trip_id])}}">
+              
+              <p class="paragraph"> {{$not->message}} {{$not->trip_end}}</p>
+              <p class="paragraph date">{{$not->date}}/{{$not->clock}}</p>
+            </a>
+            <hr style="margin: unset;">
+            @endif
+            @if($not->trip_type=='package')
+            <a class="dropdown-item dropped_a" href="{{route('track_trips_package',[$not->trip_id])}}">
+              
+              <p class="paragraph"> {{$not->message}} {{$not->trip_end}}</p>
+              <p class="paragraph date">{{$not->date}}/{{$not->clock}}</p>
+            </a>
+            <hr style="margin: unset;">
+            @endif
+            @if($not->trip_type=='driver')
+            <a class="dropdown-item dropped_a" href="{{route('track_trips_driver',[$not->trip_id])}}">
+              
+              <p class="paragraph"> {{$not->message}} {{$not->trip_end}}</p>
+              <p class="paragraph date">{{$not->date}}/{{$not->clock}}</p>
+            </a>
+            <hr style="margin: unset;">
+            @endif
+            @endif
+
+            @if($not->trip_status=='cancelled')
+            @if(Auth::user()->role_type=='USER')
+            <a class="dropdown-item dropped_a" href="{{route('trips')}}">
+
+              <p class="paragraph"> {{$not->message}} {{$not->trip_end}}</p>
+              <p class="paragraph">You may search for a new one, Sorry for your inconveince</p>
+              <p class="paragraph date">{{$not->date}}/{{$not->clock}}</p>
+
+            </a>
+            <hr style="margin: unset;">
+            @endif
+            @if(Auth::user()->role_type=='DRIVER')
+            <a class="dropdown-item dropped_a" href="{{route('trips_driver')}}">
+
+              <p class="paragraph"> {{$not->message}} {{$not->trip_end}}</p>
+              <p class="paragraph">You may search for a new one, Sorry for your inconveince</p>
+              <p class="paragraph date">{{$not->date}}/{{$not->clock}}</p>
+            </a>
+            <hr style="margin: unset;">
+            @endif
+            @endif
+            @endforeach
           </div>
         </div>
 
@@ -84,8 +161,24 @@
         </div>
         @endauth
 
-        <i class="bi bi-list mobile-nav-toggle"></i>
+        <i id="end2" class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
     </div>
   </header><!-- End Header -->
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+  <script>
+    var user_id = document.getElementById('u_id').value;
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+      cluster: 'mt1'
+    });
+    var channel = pusher.subscribe('new_notification' + user_id);
+  </script>
+
+  <script type="text/javascript" src="/assets/js/pusherNotifications.js"></script>

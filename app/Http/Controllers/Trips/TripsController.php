@@ -146,16 +146,16 @@ class TripsController extends Controller
         return view('Trips/book_trip_package_form', ['id' => $request->id, 'trip' => $trip, 'package_type' => $package_type]);
     }
 
-    public function track_trips_user()
+    public function track_trips_user($id)
     {
-        return view('Trips/trip_track');
+        return view('Trips/trip_track', ['id' => $id]);
     }
 
     public function get_passenger_track(Request $request)
     {
         $id = Auth::user()->id;
         $trip_id = $request->id;
-        return  $trip = DB::select(DB::raw("SELECT tp.*,t.start_time,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
+        return  $trip = DB::select(DB::raw("SELECT tp.*,t.driver_id ,t.end_address,t.start_time,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
         FROM `passenger_trip` tp 
         JOIN trip t ON t.trip_id=tp.trip_id
         JOIN drivers d ON d.driver_id=t.driver_id 
@@ -175,16 +175,16 @@ class TripsController extends Controller
         ORDER BY trip_id;"));
     }
 
-    public function track_trips_user_package()
+    public function track_trips_user_package($id)
     {
-        return view('Trips/trip_track_package');
+        return view('Trips/trip_track_package', ['id' => $id]);
     }
 
     public function get_package_track(Request $request)
     {
         $id = Auth::user()->id;
         $trip_id = $request->id;
-        return  $trip = DB::select(DB::raw("SELECT p.*,t.start_time,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
+        return  $trip = DB::select(DB::raw("SELECT p.*,t.driver_id ,t.end_address,t.start_time,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
         FROM `package` p 
         JOIN trip t ON t.trip_id=p.trip_id
         JOIN drivers d ON d.driver_id=t.driver_id 
@@ -203,16 +203,17 @@ class TripsController extends Controller
         SELECT trip_id,p.id as id,start_point_latitude,start_point_longitude,end_point_latitude,end_point_longitude FROM `passenger_trip` p where trip_id=$trip_id
         ORDER BY trip_id;"));
     }
-    public function track_trips_driver()
+    public function track_trips_driver($id)
     {
-        return view('Trips/trip_track_driver');
+
+        return view('Trips/trip_track_driver', ['id' => $id]);
     }
 
     public function get_driver_track(Request $request)
     {
         $id = Auth::user()->id;
         $trip_id = $request->id;
-        return  $trip = DB::select(DB::raw("SELECT t.start_time,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
+        return  $trip = DB::select(DB::raw("SELECT t.start_time,t.end_address,t.status_id,v.*,u.user_name,ifnull(c.counts,0) passengers,t.start_point_longitude s_lng ,t.start_point_latitude s_lat ,t.end_point_longitude e_lng ,t.end_point_latitude e_lat ,ifnull(pp.counts,0) packages
         FROM trip t 
         JOIN drivers d ON d.driver_id=t.driver_id 
         JOIN vehicles v ON v.vehicle_id=d.vehicle_id 
@@ -225,9 +226,11 @@ class TripsController extends Controller
     public function get_driver_trip(Request $request)
     {
         $trip_id = $request->id;
-        return  $trip = DB::select(DB::raw("SELECT 'package'AS name,start_address, trip_id,package_id as id,trip_cost, start_point_latitude,start_point_longitude,end_point_latitude,pack.end_point_longitude FROM `package` pack where trip_id=21
+        return  $trip = DB::select(DB::raw("SELECT  u.role_type,sender_id as user_id,'package'AS name,start_address, trip_id,package_id as id,trip_cost, start_point_latitude,start_point_longitude,end_point_latitude,pack.end_point_longitude FROM `package` pack
+        JOIN users u ON u.id=pack.sender_id where trip_id=$trip_id
         UNION
-        SELECT 'passenger' as name,start_address,trip_id,p.id as id,trip_cost,start_point_latitude,start_point_longitude,end_point_latitude,end_point_longitude FROM `passenger_trip` p where trip_id=21
+        SELECT  u.role_type, passenger_id,'passenger' as name,start_address,trip_id,p.id as id,trip_cost,start_point_latitude,start_point_longitude,end_point_latitude,end_point_longitude FROM `passenger_trip` p
+        JOIN users u ON u.id=p.passenger_id where trip_id=$trip_id
         ORDER BY trip_id;"));
     }
 }

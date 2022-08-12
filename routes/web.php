@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\Notification;
 use App\Models\Vehicle_type;
 use App\Models\Vehicles;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,8 +37,8 @@ Route::get('/Trips', [App\Http\Controllers\Trips\TripsController::class, 'trips_
 
 //trips user and driver
 Route::group(['prefix' => 'Trips', 'middleware' =>  'role:DRIVER,USER'], function () {
-    Route::get('/track_trip', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_user'])->name('track_trips_user');
-    Route::get('/track_trip_package', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_user_package'])->name('track_trips_package');
+    Route::get('/track_trip/{id}', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_user'])->name('track_trips_user');
+    Route::get('/track_trip_package/{id}', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_user_package'])->name('track_trips_package');
     Route::post('/book_seat', [App\Http\Controllers\Trips\TripsController::class, 'book_trips_seat'])->name('book_seat');
     Route::post('/book_trips_package', [App\Http\Controllers\Trips\TripsController::class, 'book_trips_package'])->name('book_package');
 });
@@ -44,7 +47,7 @@ Route::group(['prefix' => 'Trips', 'middleware' =>  'role:DRIVER,USER'], functio
 Route::group(['prefix' => 'Trips_driver', 'middleware' => 'role:DRIVER'], function () {
     Route::get('/', [App\Http\Controllers\Trips\TripsController::class, 'trips_driver'])->name('trips_driver');
     Route::get('/announce_trip', [App\Http\Controllers\Trips\TripsController::class, 'announce_trips'])->name('announce_trip');
-    Route::get('/track_trip', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_driver'])->name('track_trips_driver');
+    Route::get('/track_trip/{id}', [App\Http\Controllers\Trips\TripsController::class, 'track_trips_driver'])->name('track_trips_driver');
 });
 
 
@@ -95,6 +98,7 @@ Route::post('store_driver', [App\Http\Controllers\Auth\RegisterController::class
 Route::post('update_driver', [App\Http\Controllers\Profile\ProfileCRUD::class, 'update_driver'])->name('update_driver');
 Route::post('delete_driver', [App\Http\Controllers\Profile\ProfileCRUD::class, 'delete_driver'])->name('delete_driver');
 Route::post('update_vehicle', [App\Http\Controllers\Profile\ProfileCRUD::class, 'update_vehicle'])->name('update_vehicle');
+Route::get('login_user', [App\Http\Controllers\Profile\ProfileCRUD::class, 'login_user'])->name('login_user');
 
 
 // trip CRUD
@@ -132,16 +136,17 @@ Route::get('/get_package_trip', [App\Http\Controllers\Trips\TripsController::cla
 
 Route::get('/get_driver_track', [App\Http\Controllers\Trips\TripsController::class, 'get_driver_track'])->name('get_driver_track');
 Route::get('/get_driver_trip', [App\Http\Controllers\Trips\TripsController::class, 'get_driver_trip'])->name('get_driver_trip');
+Route::get('/ongoing_trip', [App\Http\Controllers\Trips\TripCRUD::class, 'ongoing_trip'])->name('ongoing_trip');
 
 
 
 Route::get('fillable', [App\Http\Controllers\Profile\ProfileController::class, 'get']);
 
 Route::get('/test', function () {
-   
 
-
-    return  view('email/forgetPassword');
+    $id = Auth::user()->id;
+    $count = DB::select(DB::raw("SELECT COUNT(user_id) as counts FROM `notifications` WHERE user_id=$id;"))[0];
+    return  $count;
 });
 
 
@@ -160,29 +165,29 @@ Route::post('reset-password', [App\Http\Controllers\Auth\ForgotPasswordControlle
 
 
 //AJAX User 
-Route::group(['prefix'=>'users'],function(){
-    Route::get('/create',[App\Http\Controllers\Admin\UserController::class, 'create']);
-    Route::post('/store',[App\Http\Controllers\Admin\UserController::class, 'store'])->name('ajax.user.store');
-    Route::get('/show/{id}',[App\Http\Controllers\Admin\UserController::class, 'show'])->name('user.show');
-    Route::post('/update',[App\Http\Controllers\Admin\UserController::class, 'update'])->name('user.update');
-    Route::get('/delete/{id}',[App\Http\Controllers\Admin\UserController::class, 'delete'])->name('user.delete');
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/create', [App\Http\Controllers\Admin\UserController::class, 'create']);
+    Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('ajax.user.store');
+    Route::get('/show/{id}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('user.show');
+    Route::post('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('user.update');
+    Route::get('/delete/{id}', [App\Http\Controllers\Admin\UserController::class, 'delete'])->name('user.delete');
 });
 
 
 //AJAX Vehicle
-Route::group(['prefix'=>'vehicles'],function(){
-    Route::get('/create',[App\Http\Controllers\Admin\VehicleController::class, 'create']);
-    Route::post('/store',[App\Http\Controllers\Admin\VehicleController::class, 'store'])->name('vehicle.store');
-    Route::get('/show/{id}',[App\Http\Controllers\Admin\VehicleController::class, 'show'])->name('vehicle.show');
-    Route::post('/update',[App\Http\Controllers\Admin\VehicleController::class, 'update'])->name('vehicle.update');
-    Route::get('/delete/{id}',[App\Http\Controllers\Admin\VehicleController::class, 'delete'])->name('vehicle.delete');
+Route::group(['prefix' => 'vehicles'], function () {
+    Route::get('/create', [App\Http\Controllers\Admin\VehicleController::class, 'create']);
+    Route::post('/store', [App\Http\Controllers\Admin\VehicleController::class, 'store'])->name('vehicle.store');
+    Route::get('/show/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'show'])->name('vehicle.show');
+    Route::post('/update', [App\Http\Controllers\Admin\VehicleController::class, 'update'])->name('vehicle.update');
+    Route::get('/delete/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'delete'])->name('vehicle.delete');
 });
 
 //AJAX Driver
-Route::group(['prefix'=>'drivers'],function(){
-    Route::get('/create',[App\Http\Controllers\Admin\DriverController::class, 'create']);
-    Route::post('/store',[App\Http\Controllers\Admin\DriverController::class, 'store'])->name('driver.store');
-    Route::get('/show/{id}',[App\Http\Controllers\Admin\DriverController::class, 'show'])->name('driver.show');
-    Route::post('/update',[App\Http\Controllers\Admin\DriverController::class, 'update'])->name('driver.update');
-    Route::get('/delete/{id}',[App\Http\Controllers\Admin\DriverController::class, 'delete'])->name('driver.delete');
+Route::group(['prefix' => 'drivers'], function () {
+    Route::get('/create', [App\Http\Controllers\Admin\DriverController::class, 'create']);
+    Route::post('/store', [App\Http\Controllers\Admin\DriverController::class, 'store'])->name('driver.store');
+    Route::get('/show/{id}', [App\Http\Controllers\Admin\DriverController::class, 'show'])->name('driver.show');
+    Route::post('/update', [App\Http\Controllers\Admin\DriverController::class, 'update'])->name('driver.update');
+    Route::get('/delete/{id}', [App\Http\Controllers\Admin\DriverController::class, 'delete'])->name('driver.delete');
 });

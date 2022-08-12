@@ -21,7 +21,7 @@
   <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
- 
+
 
   <!-- Template Main CSS File -->
   <link href="{{URL::asset('assets/css/style.css')}}" rel="stylesheet">
@@ -32,8 +32,9 @@
 
   <!-- ======= Header ======= -->
   @include('includes.header')
-
-
+  @auth
+  <input type="text" id="login" value=" {{Auth::user()->logged_in}}" hidden>
+  @endauth
 
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex justify-cntent-center align-items-center ">
@@ -45,6 +46,7 @@
               @auth
               {{Auth::user()->user_name}}
               @endauth</span></h2>
+
         </div>
       </div>
 
@@ -57,10 +59,31 @@
   <main id="main">
 
 
-
     <!-- ======= about Section ======= -->
 
     <section class="about aos-init aos-animate">
+
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content" id="start">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Registered successfully</h5>
+
+            </div>
+            <div class="modal-body">
+              Start your first trip from the Trips page
+            </div>
+            <div class="modal-footer">
+
+              <button type="button" class="btn btn-primary" id="close_modal" style="background-color: #1a6be0;" data-dismiss="modal">Close</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="container">
 
 
@@ -187,7 +210,11 @@
 
   </main><!-- End #main -->
 
+
+
+
   <!-- ======= Footer ======= -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   @include('includes.footer')
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -204,23 +231,75 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+  <script src="/assets/js/leader-line.min.js"></script>
+
   <script>
+    var line;
+    var login;
+    if (document.getElementById('login').value !== null) {
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+      login = document.getElementById('login').value;
+      if (login == 0) {
+        console.log(login);
+        $('#exampleModal').modal('toggle')
 
-    var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
-      cluster: 'mt1'
-    });
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
-    });
+      }
+    }
+
+    $('#exampleModal').on('shown.bs.modal', function(e) {
+
+      if ($(window).width() < 991) {
+        //  alert('Less than 960');
+        line = new LeaderLine(
+          document.getElementById('start'),
+          document.getElementById('end2'), {
+            startPlugColor: '#1efdaa',
+            endPlugColor: '#1a6be0',
+            gradient: true
+          }
+        );
+      } else {
+        // alert('More than 960');
+        line = new LeaderLine(
+          document.getElementById('start'),
+          document.getElementById('end'), {
+            startPlugColor: '#1efdaa',
+            endPlugColor: '#1a6be0',
+            gradient: true
+          }
+        );
+      }
+
+
+    })
+    $('#exampleModal').on('hide.bs.modal', function(e) {
+      // do something...
+      line.hide();
+    })
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script>
+    document.getElementById('close_modal').onclick = function() {
+      //alert("button was clicked");
+      $.ajax({
+        url: "{{route('login_user')}}",
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+
+
+          //  console.log('updated');
+
+        },
+        error: function() {
+          alert('no response modal');
+        }
+
+      });
+    };
   </script>
 
-  </body>
+</body>
 
 </html>

@@ -51,9 +51,10 @@
 
           </div>
 
-          <form class="rating" method="POST" action="{{ route('store_passenger') }}">
+          <form  id="frmSubmit" method="POST" action="{{ route('store_passenger') }}">
             @csrf
             <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
+            <input type="text" id="driver_id" name="driver_id" value="{{$trip->driver_id}}" hidden="true">
             <input type="text" id="start_lat_trip" name="start_lat_trip" value="{{$trip->start_point_latitude}}" hidden="true">
             <input type="text" id="end_lat_trip" name="end_lat_trip" value="{{$trip->end_point_latitude}}" hidden="true">
             <input type="text" id="start_lng_trip" name="start_lng_trip" value="{{$trip->start_point_longitude}}" hidden="true">
@@ -96,8 +97,9 @@
               <input type="text" id="end_long" name="end_long" value="37" hidden="true" required>
 
 
-              <input type="text" id="start_address" name="start_address" value="" hidden="true" required>
-              <input type="text" id="end_address" name="end_address" value="" hidden="true" required>
+              <input type="text" id="start_address" name="start_address" value="{{$trip->start_address}}" hidden="true" required>
+              <input type="text" id="end_address" name="end_address" value="{{$trip->end_address}}" hidden="true" required>
+              <input type="text" id="km" name="km" value="55" hidden="true" required>
 
             </div>
 
@@ -159,7 +161,7 @@
     document.getElementById('end_long').value = trip_end_lng;
 
     var start, end;
-
+    var start_origin, end_distenation;
     // Initialize and add the map
     function initMap() {
 
@@ -171,7 +173,7 @@
         lat: parseFloat(trip_start_lat),
         lng: parseFloat(trip_start_lng)
       };
-
+      console.log(t_start);
       const t_end = {
         lat: parseFloat(trip_end_lat),
         lng: parseFloat(trip_end_lng)
@@ -211,28 +213,9 @@
       });
 
 
-
-
-      google.maps.event.addListener(start_point, 'dragend', function(start_point) {
-        start = start_point.latLng;
-        document.getElementById('start_lat').value = start.lat();
-        document.getElementById('start_long').value = start.lng();
-
-        geocodestart(start);
-
-      });
-      google.maps.event.addListener(end_point, 'dragend', function(end_point) {
-        end = end_point.latLng;
-        document.getElementById('end_lat').value = end.lat();
-        document.getElementById('end_long').value = end.lng();
-        geocodeend(end);
-      });
-
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer({
-
         map,
-
       });
 
       directionsRenderer.addListener("directions_changed", () => {
@@ -245,6 +228,71 @@
         directionsService,
         directionsRenderer
       );
+
+      const directionsService2 = new google.maps.DirectionsService();
+      const directionsRenderer2 = new google.maps.DirectionsRenderer({
+        map,
+      });
+
+      directionsRenderer2.addListener("directions_changed", () => {
+        const directions2 = directionsRenderer2.getDirections();
+
+      });
+
+      console.log(start_point.position.lat());
+
+      google.maps.event.addListener(start_point, 'dragend', function(start_point) {
+        start = start_point.latLng;
+        //  console.log(start.lat());
+        document.getElementById('start_lat').value = start.lat();
+        document.getElementById('start_long').value = start.lng();
+
+        geocodestart(start);
+        // console.log(end_point.position.lat());
+
+        start_origin = {
+          lat: start_point.latLng.lat(),
+          lng: start_point.latLng.lng()
+        };
+        end_distenation = {
+          lat: end_point.position.lat(),
+          lng: end_point.position.lng()
+        };
+        displayRoute2(
+          start_origin,
+          end_distenation,
+          directionsService2,
+          directionsRenderer2
+        );
+
+      });
+      google.maps.event.addListener(end_point, 'dragend', function(end_point) {
+        end = end_point.latLng;
+        console.log(end.lat());
+        document.getElementById('end_lat').value = end.lat();
+        document.getElementById('end_long').value = end.lng();
+        geocodeend(end);
+
+        start_origin = {
+          lat: start_point.position.lat(),
+          lng: start_point.position.lng()
+        };
+
+        end_distenation = {
+          lat: end_point.latLng.lat(),
+          lng: end_point.latLng.lng()
+        };
+
+        displayRoute2(
+          start_origin,
+          end_distenation,
+          directionsService2,
+          directionsRenderer2
+        );
+
+      });
+
+
 
       function geocodestart(start) {
 
@@ -305,6 +353,29 @@
         })
         .then((result) => {
           display.setDirections(result);
+          console.log(result.routes[0].legs[0].distance.value / 1000);
+          document.getElementById('km').value = result.routes[0].legs[0].distance.value / 1000;
+        })
+        .catch((e) => {
+          alert("Could not display directions due to: " + e);
+        });
+
+    }
+
+    function displayRoute2(origin, destination, service, display) {
+      service
+        .route({
+          origin: origin,
+          destination: destination,
+
+          travelMode: google.maps.TravelMode.DRIVING,
+          avoidTolls: true,
+        })
+        .then((result) => {
+          // display.setDirections(result);
+          //console.log(result);
+          console.log(result.routes[0].legs[0].distance.value / 1000);
+          document.getElementById('km').value = result.routes[0].legs[0].distance.value / 1000;
         })
         .catch((e) => {
           alert("Could not display directions due to: " + e);
@@ -316,7 +387,68 @@
 
     window.initMap = initMap;
   </script>
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
+
+
+  <script>
+    window.onload = function() {
+      document.getElementById("frmSubmit").onsubmit = function onSubmit(form) {
+
+
+        var driver_id = document.getElementById('driver_id').value;
+        console.log(driver_id);
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+          cluster: 'mt1'
+        });
+        var channel2 = pusher.subscribe('new_notification' + driver_id);
+
+        var notificationsWrapper = $('.dropdown-notifications');
+        var notificationsToggle = notificationsWrapper.find('a[data-toggle]');
+        var notificationsCountElem = notificationsToggle.find('span[data-count]');
+        var notificationsCount = parseInt(notificationsCountElem.data('count'));
+        var notifications = notificationsWrapper.find('div.scrollable-container');
+
+
+        // Subscribe to the channel we specified in our Laravel Event
+
+        // Bind a function to a Event (the full Laravel class)
+
+
+        channel2.bind('my-event', function(data) {
+
+          // console.log(data.user_id);
+          var existingNotifications = notifications.html();
+          //console.log(existingNotifications);
+          //  var newNotificationHtml = 
+
+
+          var newNotificationHtml = `
+             <a class="dropdown-item dropped_a" href="Trips/track_trip/` + data.trip_id + `">
+            <p class="paragraph" > ` + data.message + ` ` + data.trip_end + `</p>
+            <p class="paragraph date">` + data.date + `/` + data.clock + `</p>
+            </a>
+            <hr style="margin: unset;">`;
+
+
+
+          //  console.log(newNotificationHtml);
+          notifications.html(newNotificationHtml + existingNotifications);
+          notificationsCount += 1;
+          notificationsCountElem.attr('data-count', notificationsCount);
+          notificationsWrapper.find('.notif-count').text(notificationsCount);
+          notificationsWrapper.show();
+
+        });
+
+      }
+
+    }
+  </script>
 
 </body>
 

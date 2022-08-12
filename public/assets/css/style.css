@@ -214,14 +214,42 @@ h6,
   font-size: 14px;
   text-transform: none;
   color: #1c3745;
+
+
 }
 
 .navbar .dropdown .dropdown-menu {
 
   right: 0;
   left: unset;
+
 }
 
+.dropped_a {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.date {
+  font-size: xx-small !important;
+  text-align: end;
+}
+
+.paragraph {
+  display: block;
+  /* or inline-block, at least its a block element */
+  width: 13rem;
+  /* or width is certain by parent element */
+  height: auto;
+  /* height cannot be defined */
+  /*  word-break: break-all; */
+  word-wrap: break-word;
+  /* if you want to cut the complete word */
+  white-space: normal;
+  margin: auto;
+  font-size: smaller;
+}
 
 @media (max-width: 1366px) {
   .navbar .dropdown .dropdown ul {
@@ -230,6 +258,18 @@ h6,
 
   .navbar .dropdown .dropdown:hover>ul {
     left: -100%;
+  }
+}
+
+@media(max-width:350px) {
+  .navbar {
+    flex-wrap: nowrap;
+  }
+}
+
+@media(max-width:450) {
+  .navbar .dropdown .dropdown-menu {
+    right: 50%;
   }
 }
 
@@ -288,6 +328,10 @@ h6,
   background-color: #fff;
   overflow-y: auto;
   transition: 0.3s;
+}
+
+.navbar-mobile div {
+  display: none;
 }
 
 .navbar-mobile a,
@@ -739,6 +783,14 @@ section {
   background-color: #F5F9FB;
 }
 
+.prof_span_label {
+  font-size: x-large;
+}
+
+.prof_span {
+  font-size: medium;
+}
+
 .profile .container {
   margin: auto;
   padding: 35px;
@@ -760,10 +812,10 @@ section {
 .profile .container .btn-profile-delete {
   background-color: #68A4C4;
   color: white;
-  font-size: large;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 10px;
+  /*  font-size: large;
+ padding-left: 20px;
+  padding-right: 20px;*/
+  border-radius: 20px;
   margin: 5px;
   border: 2px solid #68A4C4;
 }
@@ -1431,72 +1483,4 @@ section {
   text-align: center;
   background-color: #68A4C4;
   color: white;
-}
-
-/*rating*/
-.rating {
-  display: inline-block;
-  position: relative;
-  height: 50px;
-  line-height: 50px;
-  font-size: 50px;
-}
-
-.rating label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  cursor: pointer;
-}
-
-.rating label:last-child {
-  position: static;
-}
-
-.rating label:nth-child(1) {
-  z-index: 5;
-}
-
-.rating label:nth-child(2) {
-  z-index: 4;
-}
-
-.rating label:nth-child(3) {
-  z-index: 3;
-}
-
-.rating label:nth-child(4) {
-  z-index: 2;
-}
-
-.rating label:nth-child(5) {
-  z-index: 1;
-}
-
-.rating label input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-}
-
-.rating label .icon {
-  float: left;
-  color: transparent;
-}
-
-.rating label:last-child .icon {
-  color: #000;
-}
-
-.rating:not(:hover) label input:checked~.icon,
-.rating:hover label:hover input~.icon {
-  color: orange;
-
-}
-
-.rating label input:focus:not(:checked)~.icon:last-child {
-  color: #000;
-  text-shadow: 0 0 5px #09f;
 }

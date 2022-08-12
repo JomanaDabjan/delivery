@@ -170,7 +170,7 @@ class ProfileCRUD extends Controller
         $id = Auth::user()->id;
         $user = User::findOrFail($id);
         $driver = Driver::findOrFail($id);
-        $vehicle_id=$data['d_id'];
+        $vehicle_id = $data['d_id'];
         $pass_trips = Passenger_trip::where('passenger_id', $id)->get();
         $trips = Trip::where('driver_id', $id)->get();
         $packs = Package::where('sender_id', $id)->get();
@@ -245,6 +245,13 @@ class ProfileCRUD extends Controller
             'phone' => $data['phone'],
         ]);
         return redirect()->back()->with(['success' => 'updated successfuly']);
+    }
 
+    public function login_user()
+    {
+        $id = Auth::user()->id;
+        return $update = User::where("id", $id)->update([
+            'logged_in' => 1,
+        ]);
     }
 }

@@ -57,7 +57,20 @@
 
     <section class="trip_book">
 
+      @if (Session::has('success'))
+      <div class="alert alert-success" style="width: fit-content;margin: auto;" role="alert">
+        {{Session::get('success')}}
+      </div>
+      <br>
+      @endif
 
+      
+      @if (Session::has('error'))
+      <div class="alert alert-danger" style="width: fit-content;margin: auto;" role="alert">
+        {{Session::get('error')}}
+      </div>
+      <br>
+      @endif
 
       <div class="section-title">
         <h2>Choose a Trip </h2>

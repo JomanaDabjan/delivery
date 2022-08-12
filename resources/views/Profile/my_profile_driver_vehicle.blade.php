@@ -49,7 +49,7 @@
     .dot {
       height: 25px;
       width: 25px;
-      background-color: <?php echo $vehicle->color?>;
+      background-color: <?php echo $vehicle->color ?>;
       display: inline-block;
     }
   </style>
@@ -59,12 +59,12 @@
 
       <div class="container">
         <div class="pro_info">
-        @if (Session::has('success'))
+          @if (Session::has('success'))
           <div class="alert alert-success" role="alert">
             {{Session::get('success')}}
           </div>
           @endif
-          
+
           <p>Brand:{{$vehicle->brand}}</p>
           <p>Model:{{$vehicle->model}}</p>
           <p>Lisence Number:{{$vehicle->license_num}}</p>

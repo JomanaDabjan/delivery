@@ -43,6 +43,11 @@
     <section class="signup">
 
       <div class="container p-4">
+      <h1>Signup as User</h1>
+      <p>or Take control of the stearing wheel as a 
+      <a class="text-decoration-underline" href="{{ route('register_driver') }}"> Driver</a>
+      </p>
+      
         <form method="POST" action="{{ route('store_user') }}">
           @csrf
           <div class="form-group">
@@ -119,10 +124,8 @@
             <button type="submit" class="btn-signup btn">
               {{ __('Register') }}
             </button>
-            <a class="text-decoration-underline" href="{{ route('register_driver') }}">or Signup as a Driver</a>
+            
           </div>
-
-
 
         </form>
 

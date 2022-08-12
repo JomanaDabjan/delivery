@@ -43,19 +43,40 @@
 
       <div class="container">
         <div class="pro_info">
-          <p>User Name: {{Auth::user()->user_name}}</p>
-          <p>Full Name: {{Auth::user()->full_name}}</p>
-          <p>Phone: {{Auth::user()->phone}}</p>
-          <p>Email: {{Auth::user()->email}}</p>
+          @if (Session::has('success'))
+          <div class="alert alert-success" role="alert">
+            {{Session::get('success')}}
+          </div>
+          @endif
+          <p class="row">
+            <span class="prof_span_label col">User Name: </span>
+            <span class="prof_span col"> {{Auth::user()->user_name}}</span>
+
+          </p>
+          <p class="row">
+            <span class="prof_span_label col"> Full Name: </span>
+            <span class="prof_span col"> {{Auth::user()->full_name}}</span>
+
+          </p>
+          <p class="row">
+            <span class="prof_span_label col"> Phone: </span>
+            <span class="prof_span col"> {{Auth::user()->phone}}</span>
+
+          </p>
+          <p class="row">
+            <span class="prof_span_label col"> Email: </span>
+            <span class="prof_span col"> {{Auth::user()->email}}</span>
+
+          </p>
 
         </div>
 
 
-        <div class="profile-group">
+        <div class="profile-group ">
           <a href="#editModal" data-toggle="modal" class="btn-profile btn ">Edit My Info</a>
           <a href="{{route('my_profile/log')}}" class="btn-profile btn ">My Trips Log</a>
           <a href="{{route('my_profile/change_password')}}" class="btn-profile btn ">Change password</a>
-          <a class="btn-profile-delete btn " href="#delModal" data-toggle="modal">Delete My Account</a>
+          <a class="btn-profile-delete btn " href="#delModal" data-toggle="modal ">Delete My Account</a>
         </div>
       </div>
 

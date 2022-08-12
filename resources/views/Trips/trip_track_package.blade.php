@@ -25,6 +25,7 @@
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="/assets/css/rating.css" rel="stylesheet">
 </head>
 
 
@@ -44,6 +45,7 @@
 
         <div class="section-title">
           <h2>Trip Details</h2>
+          <input type="text" id="trip_id" value="{{$id}}" hidden>
         </div>
         <div id="trip" class="row">
 
@@ -102,7 +104,7 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-commn">Evaluate Trip</button>
 
-              <input type="text" id="trip_id" name="trip_id" value="21" hidden="true">
+              <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
 
               </form>
             </div>
@@ -126,13 +128,15 @@
 
             </div>
             <div class="modal-footer justify-content-center">
-              <form method="POST" action="{{ route('cancel_package_trip') }}">
+              <form method="POST" id="cancelform" action="{{ route('cancel_package_trip') }}">
                 @csrf
 
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue</button>
                 <button type="submit" class="btn btn-danger">Call off Trip</button>
 
-                <input type="text" id="trip_id" name="trip_id" value="21" hidden="true">
+                <input type="text" id="trip_id" name="trip_id" value="{{$id}}" hidden="true">
+                <input type="text" id="driver_id" name="driver_id" value="" hidden="true">
+                <input type="text" id="end_address" name="end_address" value="" hidden="true">
 
               </form>
             </div>
@@ -175,7 +179,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script>
     let map, infoWindow, pos;
-
+    var driver_id, end_address;
+    var trip_id = document.getElementById('trip_id').value;
     //get driver trip coord
     var trip_start_lat;
     var trip_start_lng;
@@ -188,13 +193,14 @@
       type: 'GET',
       dataType: 'json',
       data: {
-        id: 21
+        id: trip_id
       },
       success: function(response) {
         var data = response;
         var st = "";
         $.each(data, function(index) {
-
+          driver_id = data[index].driver_id;
+          end_address = data[index].end_address;
 
           if (data[index].trip_status == 'ended') {
             console.log(data[index].trip_status);
@@ -229,6 +235,9 @@
 
 
         });
+
+        document.getElementById('driver_id').value = driver_id;
+        document.getElementById('end_address').value = end_address;
 
         $("#trip").html(st);
         startTime();
@@ -327,7 +336,7 @@
           type: 'GET',
           dataType: 'json',
           data: {
-            id: 21
+            id: trip_id
           },
           success: function(response) {
             var data = response;
@@ -464,7 +473,7 @@
       // document.getElementById('diff').value = t;
 
       //console.log(360000);
-      const today = new Date(t);
+      const today = new Date((parseInt(t) - 7200000));
 
       let h = today.getHours();
       let m = today.getMinutes();
@@ -475,12 +484,20 @@
 
       setTimeout(startTime, 1000);
       var st = '';
-      if (t > -360000) {
+      if (parseInt(t) == 0) {
+        console.log('it is time');
+      }
+      if (parseInt(t) < 0) {
+        document.getElementById('timer').innerHTML = "00:00:00";
+
+      }
+      if (parseInt(t) > 0) {
         document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
         st += "<div class='col-3'></div>";
         st += "<br><button id='trip_info'  type='button' href='#tripModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>End Trip</button>"
         $("#button").html(st);
-      } else {
+      }
+      if (parseInt(t) < -3600000) {
         document.getElementById('timer').innerHTML = "00:00:00";
         st += "<div class='col-3'></div>";
         st += "<br><button id='trip_info'  type='button' href='#canselModal'  data-toggle='modal' class='col-6 btn-trip-book btn mt-3'>Cancel Trip</button>"
@@ -503,6 +520,69 @@
       console.log('New star rating: ' + this.value);
       document.getElementById("rate").value = this.value;
     });
+  </script>
+
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+
+
+  <script>
+    window.onload = function() {
+      document.getElementById("cancelform").onsubmit = function onSubmit(form) {
+
+
+        var driver_id = document.getElementById('driver_id').value;
+        console.log(driver_id);
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f9c5c8ee1acd9cca06db', {
+          cluster: 'mt1'
+        });
+        var channel2 = pusher.subscribe('new_notification' + driver_id);
+
+        var notificationsWrapper = $('.dropdown-notifications');
+        var notificationsToggle = notificationsWrapper.find('a[data-toggle]');
+        var notificationsCountElem = notificationsToggle.find('span[data-count]');
+        var notificationsCount = parseInt(notificationsCountElem.data('count'));
+        var notifications = notificationsWrapper.find('div.scrollable-container');
+
+
+        // Subscribe to the channel we specified in our Laravel Event
+
+        // Bind a function to a Event (the full Laravel class)
+
+
+        channel2.bind('my-event', function(data) {
+
+          // console.log(data.user_id);
+          var existingNotifications = notifications.html();
+          //console.log(existingNotifications);
+          //  var newNotificationHtml = 
+
+
+          var newNotificationHtml = `
+         <a class="dropdown-item dropped_a" href="Trips/track_trip/` + data.trip_id + `">
+        <p class="paragraph" > ` + data.message + ` ` + data.trip_end + `</p>
+        <p class="paragraph date">` + data.date + `/` + data.clock + `</p>
+        </a>
+        <hr style="margin: unset;">`;
+
+
+
+          //  console.log(newNotificationHtml);
+          notifications.html(newNotificationHtml + existingNotifications);
+          notificationsCount += 1;
+          notificationsCountElem.attr('data-count', notificationsCount);
+          notificationsWrapper.find('.notif-count').text(notificationsCount);
+          notificationsWrapper.show();
+
+        });
+
+      }
+
+    }
   </script>
 </body>
 

@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Damascus',
 
     /*
     |--------------------------------------------------------------------------
@@ -181,8 +181,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Spatie\Geocoder\GeocoderServiceProvider::class,
-        Geocodio\GeocodioServiceProvider::class,
+       
         /*
          * Package Service Providers...
          */
@@ -192,7 +191,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
@@ -211,8 +210,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Geocoder' => Spatie\Geocoder\Facades\Geocoder::class,
-        'Geocodio' => Geocodio\Facades\Geocodio::class,
+        'Carbon' => Illuminate\Support\Carbon::class,
     ])->toArray(),
 
 ];
